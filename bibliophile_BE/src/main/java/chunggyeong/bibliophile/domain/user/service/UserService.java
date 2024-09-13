@@ -4,6 +4,7 @@ import chunggyeong.bibliophile.domain.interest.domain.Classification;
 import chunggyeong.bibliophile.domain.interest.exception.DuplicateClassificationException;
 import chunggyeong.bibliophile.domain.interest.exception.InterestLimitExceededException;
 import chunggyeong.bibliophile.domain.interest.service.InterestServiceUtils;
+import chunggyeong.bibliophile.domain.oauth.service.OauthServiceUtils;
 import chunggyeong.bibliophile.domain.user.domain.RefreshToken;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.domain.user.domain.repository.RefreshTokenRepository;
@@ -12,10 +13,12 @@ import chunggyeong.bibliophile.domain.user.exception.NicknameDuplicationExceptio
 import chunggyeong.bibliophile.domain.user.exception.UserDuplicationException;
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.CheckNicknameRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.SignUpUserRequest;
+import chunggyeong.bibliophile.domain.user.presentation.dto.request.UpdateUserRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.CheckNicknameResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserProfileResponse;
 import chunggyeong.bibliophile.global.security.JwtTokenProvider;
 import chunggyeong.bibliophile.global.utils.security.SecurityUtils;
+import chunggyeong.bibliophile.global.utils.user.UserUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final InterestServiceUtils interestServiceUtils;
+    private final UserUtils userUtils;
+    private final OauthServiceUtils oauthServiceUtils;
 
     // 회원 가입
     @Transactional
@@ -54,9 +59,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        classificationList.forEach(classification ->
-                interestServiceUtils.addInterest(user, classification)
-        );
+        addClassification(classificationList, user);
 
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
@@ -68,6 +71,7 @@ public class UserService {
 
         return new UserProfileResponse(user, classificationList);
     }
+
 
     // 닉네임 중복 확인
     public CheckNicknameResponse checkNickname(CheckNicknameRequest checkNicknameRequest) {
@@ -84,6 +88,49 @@ public class UserService {
         jwtTokenProvider.setHeaderRefreshTokenEmpty(response);
     }
 
+    // 회원 정보 조회
+    public UserProfileResponse findUser() {
+        User user = userUtils.getUserFromSecurityContext();
+
+        List<Classification> classificationList = interestServiceUtils.findInterestsByUser(user);
+
+        return new UserProfileResponse(user, classificationList);
+    }
+
+    //회원 정보 수정
+    @Transactional
+    public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest) {
+        User user = userUtils.getUserFromSecurityContext();
+        List<Classification> classificationList = interestServiceUtils.findInterestsByUser(user);
+
+        if (userRepository.existsByNickname(updateUserRequest.nickname())) {
+            throw NicknameDuplicationException.EXCEPTION;
+        }
+
+        user.updateUser(updateUserRequest.nickname(), updateUserRequest.profileImage());
+        interestServiceUtils.deleteAllByUser(user);
+        addClassification(updateUserRequest.classification(), user);
+
+        List<Classification> updateClassificationList = interestServiceUtils.findInterestsByUser(user);
+
+        return new UserProfileResponse(user, updateClassificationList);
+    }
+
+    // 회원 탈퇴
+    @Transactional
+    public void withdraw(HttpServletResponse response) {
+        User user = userUtils.getUserFromSecurityContext();
+
+        userRepository.delete(user);
+
+        oauthServiceUtils.deleteByUser(user);
+
+        refreshTokenRepository.deleteByUserId(user.getId());
+
+        jwtTokenProvider.setHeaderAccessTokenEmpty(response);
+        jwtTokenProvider.setHeaderRefreshTokenEmpty(response);
+    }
+
     // 회원가입 시 검증
     private void validateSignUpRequest(SignUpUserRequest signUpUserRequest, List<Classification> classificationList) {
         if (userRepository.existsByEmailAndOauthServerType(signUpUserRequest.email(), signUpUserRequest.oauthServerType())) {
@@ -94,14 +141,21 @@ public class UserService {
             throw NicknameDuplicationException.EXCEPTION;
         }
 
-        if (4 <= classificationList.size()) {
-            throw InterestLimitExceededException.EXCEPTION;
-        }
-
         boolean hasDuplicates = classificationList.size() != new HashSet<>(classificationList).size();
 
         if (hasDuplicates) {
             throw DuplicateClassificationException.EXCEPTION;
         }
+    }
+
+    // 관심사 추가시 검증
+    private void addClassification(List<Classification> classificationList, User user) {
+        if (4 <= classificationList.size()) {
+            throw InterestLimitExceededException.EXCEPTION;
+        }
+
+        classificationList.forEach(classification ->
+                interestServiceUtils.addInterest(user, classification)
+        );
     }
 }
