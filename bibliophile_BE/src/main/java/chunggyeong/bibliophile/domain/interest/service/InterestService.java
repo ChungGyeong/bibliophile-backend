@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,5 +37,19 @@ public class InterestService implements InterestServiceUtils {
         Interest interest = Interest.createInterest(user, classification);
 
         interestRepository.save(interest);
+    }
+
+    // 유저의 관심사 조회
+    @Override
+    public List<Classification> findInterestsByUser(User user) {
+        return interestRepository.findAllByUser(user).stream()
+                .map(Interest::getClassification)
+                .collect(Collectors.toList());
+    }
+
+    // 유저의 관심사 모두 삭제
+    @Override
+    public void deleteAllByUser(User user) {
+        interestRepository.deleteAllByUser(user);
     }
 }

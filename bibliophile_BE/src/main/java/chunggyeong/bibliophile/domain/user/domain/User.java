@@ -62,4 +62,9 @@ public class User extends BaseEntity {
                 .oauthServerType(oauthServerType)
                 .build();
     }
+
+    public void updateUser(String nickname, String profileImageUrl) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+    }
 }

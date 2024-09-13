@@ -25,7 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OauthService {
+public class OauthService implements OauthServiceUtils {
 
     private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
     private final UserRepository userRepository;
@@ -84,5 +84,11 @@ public class OauthService {
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteByUser(User user) {
+        oauthMemberRepository.deleteByEmailAndOauthServerType(user.getEmail(), user.getOauthServerType());
     }
 }

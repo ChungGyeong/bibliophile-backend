@@ -2,6 +2,7 @@ package chunggyeong.bibliophile.domain.user.presentation;
 
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.CheckNicknameRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.SignUpUserRequest;
+import chunggyeong.bibliophile.domain.user.presentation.dto.request.UpdateUserRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.CheckNicknameResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserProfileResponse;
 import chunggyeong.bibliophile.domain.user.service.UserService;
@@ -30,6 +31,7 @@ public class UserController {
         return userService.signUp(signUpUserRequest, response);
     }
 
+    @SecurityRequirements
     @Operation(summary = "닉네임 중복 확인")
     @GetMapping("/check-nickname")
     public CheckNicknameResponse checkNickname(@RequestBody CheckNicknameRequest nicknameCheckRequest) {
@@ -40,5 +42,23 @@ public class UserController {
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {
         userService.logout(response);
+    }
+
+    @Operation(summary = "회원 정보 조회")
+    @GetMapping
+    public UserProfileResponse findUser() {
+        return userService.findUser();
+    }
+
+    @Operation(summary = "회원 정보 수정")
+    @PatchMapping
+    public UserProfileResponse updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+        return userService.updateUser(updateUserRequest);
+    }
+
+    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping
+    public void withdraw(HttpServletResponse response) {
+        userService.withdraw(response);
     }
 }
