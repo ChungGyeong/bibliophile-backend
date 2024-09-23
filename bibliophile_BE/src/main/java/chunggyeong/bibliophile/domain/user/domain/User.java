@@ -1,5 +1,6 @@
 package chunggyeong.bibliophile.domain.user.domain;
 
+import chunggyeong.bibliophile.domain.bookmark.domain.Bookmark;
 import chunggyeong.bibliophile.domain.interest.domain.Interest;
 import chunggyeong.bibliophile.domain.oauth.domain.OauthServerType;
 import chunggyeong.bibliophile.global.database.BaseEntity;
@@ -39,6 +40,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Interest> interestList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
 
     @Builder
     public User(String nickname, String email, String profileImageUrl, LocalDate birthday, String wordCloudImgUrl, Gender gender, OauthServerType oauthServerType) {
