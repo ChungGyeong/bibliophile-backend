@@ -28,7 +28,7 @@ public class BookController {
     @Operation(summary = "isbn 기반 책 검색")
     @GetMapping
     public BookResponse searchBookListByIsbn(@RequestParam String isbn) {
-        return bookService.findBookByIsbn(isbn).get();
+        return bookService.findBookByIsbn(isbn);
     }
 
 }
