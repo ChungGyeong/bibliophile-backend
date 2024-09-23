@@ -13,11 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByOauthServerTypeAndEmail(OauthServerType oauthServerType, String email);
 
-    Optional<User> findByNickname(String nickname);
-
     boolean existsByNickname(String nickname);
 
     boolean existsByEmailAndOauthServerType(String email, OauthServerType oauthServerType);
 
-    Slice<User> findAllByNicknameContaining(String nickname, Pageable pageable);
 }
