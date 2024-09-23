@@ -11,6 +11,8 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
+        hbm2ddl:
+          schema_filter_provider: chunggyeong.bibliophile.global.database.CustomSchemaFilterProvider
   servlet:
     multipart:
       max-file-size: 50MB
