@@ -34,7 +34,7 @@ public class BookService implements BookServiceUtils {
     }
 
     @Override
-    public Book findBookById(Long id) {
+    public Book queryBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> BookNotFoundException.EXCEPTION);
     }
 }

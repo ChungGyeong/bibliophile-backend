@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +31,10 @@ public class BookmarkService implements BookmarkServiceUtils{
     // 즐겨찾기 추가
     @Transactional
     public BookmarkResponse addBookmark(AddBookmarkRequest addBookmarkRequest) {
-        Book book = bookServiceUtils.findBookById(addBookmarkRequest.bookId());
+        Book book = bookServiceUtils.queryBook(addBookmarkRequest.bookId());
         User user = userUtils.getUserFromSecurityContext();
 
-        if (bookmarkRepository.existsByUserAndBook(user, book)) {
+        if (existsByUserAndBook(user, book)) {
             throw DuplicatedBookmarkException.EXCEPTION;
         }
 
@@ -48,7 +47,7 @@ public class BookmarkService implements BookmarkServiceUtils{
 
     @Transactional
     public void deleteBookmark(Long bookmarkId) {
-        Bookmark bookmark = findBookmarkById(bookmarkId);
+        Bookmark bookmark = queryBookmark(bookmarkId);
         User user = userUtils.getUserFromSecurityContext();
 
         bookmark.validUserIsHost(user);
@@ -67,7 +66,12 @@ public class BookmarkService implements BookmarkServiceUtils{
     }
 
     @Override
-    public Bookmark findBookmarkById(Long bookmarkId) {
+    public Bookmark queryBookmark(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(() -> BookmarkNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public boolean existsByUserAndBook(User user, Book book) {
+        return bookmarkRepository.existsByUserAndBook(user, book);
     }
 }
