@@ -4,6 +4,7 @@ import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.AddMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookStatusRequest;
+import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +35,12 @@ public class MyBookController {
         return myBookService.findMyBookByMyBookId(myBookId);
     }
 
+    @Operation(summary = "나의 책 단건 조회")
+    @GetMapping("/book/{bookId}")
+    public MyBookResponse findMyBookByBookId(@PathVariable Long bookId) {
+        return myBookService.findMyBookByBookId(bookId);
+    }
+
     @Operation(summary = "나의 책 현재까지 읽은 페이지 변경")
     @PatchMapping("/page")
     public MyBookResponse updateMyBook(@RequestBody @Valid UpdateMyBookRequest updateMyBookRequest) {
@@ -56,5 +63,11 @@ public class MyBookController {
     @GetMapping()
     public List<MyBookResponse> findMyBooksByStatus(@RequestParam("status") ReadingStatus readingStatus) {
         return myBookService.findMyBooksByStatus(readingStatus);
+    }
+
+    @Operation(summary = "나의 책 리스트 조회")
+    @GetMapping("/statistics")
+    public List<MyBookCountByKDC> findMyBooksStatistics() {
+        return myBookService.findMyBooksStatistics();
     }
 }

@@ -43,6 +43,7 @@ public enum ErrorCode {
     INTEREST_DUPLICATION(409, "이미 등록한 관심사입니다."),
     BOOKMARK_DUPLICATION(409, "이미 등록한 즐겨찾기입니다."),
     REVIEW_DUPLICATION(409, "해당 책에 이미 리뷰를 작성했습니다."),
+    MY_BOOK_DUPLICATION(409, "해당 책을 이미 읽고 있습니다."),
 
     /* 429 요청 횟수 초과 */
     MAX_INTEREST_LIMIT_EXCEEDED(429, "등록 가능한 관심사의 수를 초과했습니다."),
