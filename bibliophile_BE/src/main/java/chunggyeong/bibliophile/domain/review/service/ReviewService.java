@@ -2,6 +2,8 @@ package chunggyeong.bibliophile.domain.review.service;
 
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.service.BookServiceUtils;
+import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
+import chunggyeong.bibliophile.domain.myBook.service.MyBookServiceUtils;
 import chunggyeong.bibliophile.domain.review.domain.Review;
 import chunggyeong.bibliophile.domain.review.domain.repository.ReviewRepository;
 import chunggyeong.bibliophile.domain.review.exception.DuplicateReviewException;
@@ -28,6 +30,7 @@ public class ReviewService implements ReviewServiceUtils{
 
     private final ReviewRepository reviewRepository;
     private final BookServiceUtils bookServiceUtils;
+    private final MyBookServiceUtils myBookServiceUtils;
     private final UserUtils userUtils;
 
     // 리뷰 작성
@@ -55,6 +58,16 @@ public class ReviewService implements ReviewServiceUtils{
         boolean isHost = Objects.equals(review.getUser().getId(), user.getId());
 
         return new ReviewResponse(review, user.getNickname(), isHost);
+    }
+
+    // 해당 책 내가 작성한 리뷰 보기
+    public ReviewResponse findReviewsByUser(Long myBookId) {
+        User user = userUtils.getUserFromSecurityContext();
+        MyBook myBook = myBookServiceUtils.queryMyBook(myBookId);
+        Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
+        Review review = reviewRepository.findByUserAndBook(user, book).orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        return new ReviewResponse(review, user.getNickname(), true);
     }
 
     // 리뷰 수정

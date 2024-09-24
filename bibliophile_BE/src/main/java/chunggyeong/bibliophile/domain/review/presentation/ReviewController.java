@@ -35,6 +35,12 @@ public class ReviewController {
         return reviewService.fndReviewByReviewId(reviewId);
     }
 
+    @Operation(summary = "리뷰 단건 보기")
+    @GetMapping("/mine/{myBookId}")
+    public ReviewResponse findReviewsByUser(@PathVariable Long myBookId) {
+        return reviewService.findReviewsByUser(myBookId);
+    }
+
     @Operation(summary = "리뷰 수정")
     @PatchMapping()
     public ReviewResponse updateReview(@RequestBody @Valid UpdateReviewRequest updateReviewRequest) {

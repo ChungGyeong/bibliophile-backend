@@ -1,10 +1,9 @@
 package chunggyeong.bibliophile.domain.myBook.domain;
 
 import chunggyeong.bibliophile.domain.book.domain.Book;
-import chunggyeong.bibliophile.domain.bookmark.exception.UserNotBookmarkHostException;
 import chunggyeong.bibliophile.domain.myBook.exception.PageLimitExceededException;
 import chunggyeong.bibliophile.domain.myBook.exception.UserNotMyBookHostException;
-import chunggyeong.bibliophile.domain.review.domain.Review;
+import chunggyeong.bibliophile.domain.timer.domain.Timer;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.database.BaseEntity;
 import jakarta.persistence.*;
@@ -46,6 +45,9 @@ public class MyBook extends BaseEntity {
 
     @Enumerated(STRING)
     private ReadingStatus readingStatus;
+
+    @OneToMany(mappedBy = "myBook", cascade = CascadeType.ALL)
+    private List<Timer> timerList = new ArrayList<>();
 
     @Builder
     public MyBook(User user, Book book, int readingPage, Duration totalReadingTime, ReadingStatus readingStatus) {

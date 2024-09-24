@@ -6,10 +6,12 @@ import chunggyeong.bibliophile.domain.bookmark.service.BookmarkServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
+import chunggyeong.bibliophile.domain.myBook.exception.DuplicateMyBookException;
 import chunggyeong.bibliophile.domain.myBook.exception.MyBookNotFoundException;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.AddMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookStatusRequest;
+import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +44,10 @@ public class MyBookService implements MyBookServiceUtils{
         Book book = bookServiceUtils.queryBook(addMyBookRequest.bookId());
         MyBook myBook = MyBook.createMyBook(user, book);
 
+        if (myBookRepository.existsByUserAndBook(user, book)) {
+            throw DuplicateMyBookException.EXCEPTION;
+        }
+
         myBookRepository.save(myBook);
 
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
@@ -55,6 +63,20 @@ public class MyBookService implements MyBookServiceUtils{
         validUserIsHost(myBook, user);
 
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
+        boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
+        String totalReadingTime = getTotalTimeFormatted(myBook.getTotalReadingTime());
+        int readingTime = (int) Math.round((double) myBook.getReadingPage() / book.getPage() * 100);
+
+        return new MyBookResponse(myBook, book, totalReadingTime, readingTime, isBookmarked);
+    }
+
+    // 나의 책장에서 보기
+    public MyBookResponse findMyBookByBookId(Long bookId) {
+        Book book = bookServiceUtils.queryBook(bookId);
+        User user = userUtils.getUserFromSecurityContext();
+
+        MyBook myBook = myBookRepository.findByUserAndBook(user, book).orElseThrow(() -> MyBookNotFoundException.EXCEPTION);
+
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
         String totalReadingTime = getTotalTimeFormatted(myBook.getTotalReadingTime());
         int readingTime = (int) Math.round((double) myBook.getReadingPage() / book.getPage() * 100);
@@ -126,6 +148,23 @@ public class MyBookService implements MyBookServiceUtils{
 
                     return new MyBookResponse(myBook, book, totalReadingTime, readingTime, isBookmarked);
                 })
+                .collect(Collectors.toList());
+    }
+
+    // 나의 책 분야별 통계 조회
+    public List<MyBookCountByKDC> findMyBooksStatistics() {
+        User user = userUtils.getUserFromSecurityContext();
+        List<MyBook> allByUser = myBookRepository.findAllByUser(user);
+
+        Map<String, Long> kdcCountMap = allByUser.stream()
+                .map(myBook -> myBook.getBook().getKdc())
+                .collect(Collectors.groupingBy(
+                        Function.identity(),
+                        Collectors.counting()
+                ));
+
+        return kdcCountMap.entrySet().stream()
+                .map(entry -> new MyBookCountByKDC(entry.getKey(), entry.getValue().intValue()))
                 .collect(Collectors.toList());
     }
 
