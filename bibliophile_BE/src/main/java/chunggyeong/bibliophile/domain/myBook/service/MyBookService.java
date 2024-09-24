@@ -52,7 +52,7 @@ public class MyBookService implements MyBookServiceUtils{
         MyBook myBook = queryMyBook(myBookId);
         User user = userUtils.getUserFromSecurityContext();
 
-        myBook.validUserIsHost(user);
+        validUserIsHost(myBook, user);
 
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
@@ -68,7 +68,7 @@ public class MyBookService implements MyBookServiceUtils{
         MyBook myBook = queryMyBook(updateMyBookRequest.myBookId());
         User user = userUtils.getUserFromSecurityContext();
 
-        myBook.validUserIsHost(user);
+        validUserIsHost(myBook, user);
 
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
 
@@ -88,7 +88,7 @@ public class MyBookService implements MyBookServiceUtils{
         MyBook myBook = queryMyBook(myBookId);
         User user = userUtils.getUserFromSecurityContext();
 
-        myBook.validUserIsHost(user);
+        validUserIsHost(myBook, user);
 
         myBookRepository.delete(myBook);
     }
@@ -103,12 +103,13 @@ public class MyBookService implements MyBookServiceUtils{
         String totalReadingTime = getTotalTimeFormatted(myBook.getTotalReadingTime());
         int readingTime = (int) Math.round((double) myBook.getReadingPage() / book.getPage() * 100);
 
-        myBook.validUserIsHost(user);
+        validUserIsHost(myBook, user);
 
         myBook.updateReadingStatus(updateMyBookStatusRequest.status());
 
         return new MyBookResponse(myBook, book, totalReadingTime, readingTime, isBookmarked);
     }
+
 
     // 나의 책 리스트 조회
     public List<MyBookResponse> findMyBooksByStatus(ReadingStatus readingStatus) {
@@ -133,6 +134,11 @@ public class MyBookService implements MyBookServiceUtils{
         long minutes = totalReadingTime.toMinutesPart();
         long seconds = totalReadingTime.toSecondsPart();
         return String.format("%d:%d:%d초", hours, minutes, seconds);
+    }
+
+    @Override
+    public void validUserIsHost(MyBook myBook, User user) {
+        myBook.validUserIsHost(user);
     }
 
     @Override

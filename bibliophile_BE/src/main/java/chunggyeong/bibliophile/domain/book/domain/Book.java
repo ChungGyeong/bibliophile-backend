@@ -1,11 +1,14 @@
 package chunggyeong.bibliophile.domain.book.domain;
 
+import chunggyeong.bibliophile.domain.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
+import java.util.ArrayList;
+import java.util.List;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -17,6 +20,9 @@ public class Book {
     @Id
     @Column(name = "book_id")
     private Long id;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Review> reviewList = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT")
     private String contents;
