@@ -25,6 +25,7 @@ public enum ErrorCode {
     USER_INFO_NOT_FOUND(404, "회원가입을 진행해 주세요."),
     USER_NOT_STORYBOOK_HOST(403, "해당하는 즐겨찾기의 소유자가 아닙니다."),
     USER_NOT_MY_BOOK_HOST(403, "해당하는 나의 책의 소유자가 아닙니다."),
+    USER_NOT_REVIEW_HOST(403, "해당하는 리뷰의 소유자가 아닙니다."),
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
@@ -34,12 +35,14 @@ public enum ErrorCode {
     BOOK_NOT_FOUND(404, "해당하는 책 정보를 찾을 수 없습니다."),
     BOOKMARK_NOT_FOUND(404, "해당하는 즐겨찾기 정보를 찾을 수 없습니다."),
     MY_BOOK_NOT_FOUND(404, "해당하는 나의 책 정보를 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND(404, "해당하는 리뷰 정보를 찾을 수 없습니다."),
 
     /* 409 중복된 리소스 */
     USER_DUPLICATION(409, "이미 가입된 사용자입니다."),
     NICKNAME_DUPLICATION(409, "이미 사용중인 닉네임입니다."),
     INTEREST_DUPLICATION(409, "이미 등록한 관심사입니다."),
     BOOKMARK_DUPLICATION(409, "이미 등록한 즐겨찾기입니다."),
+    REVIEW_DUPLICATION(409, "해당 책에 이미 리뷰를 작성했습니다."),
 
     /* 429 요청 횟수 초과 */
     MAX_INTEREST_LIMIT_EXCEEDED(429, "등록 가능한 관심사의 수를 초과했습니다."),

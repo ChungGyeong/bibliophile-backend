@@ -4,6 +4,7 @@ import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.bookmark.exception.UserNotBookmarkHostException;
 import chunggyeong.bibliophile.domain.myBook.exception.PageLimitExceededException;
 import chunggyeong.bibliophile.domain.myBook.exception.UserNotMyBookHostException;
+import chunggyeong.bibliophile.domain.review.domain.Review;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.database.BaseEntity;
 import jakarta.persistence.*;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
