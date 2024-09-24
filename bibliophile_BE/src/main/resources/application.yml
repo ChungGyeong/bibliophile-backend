@@ -61,3 +61,15 @@ aws:
   s3:
     bucket: ${AWS_S3_BUCKET}
     base-url: ${AWS_S3_BASE_URL}
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    path: ${SWAGGER_PATH}
+    disable-swagger-default-url: true
+    display-request-duration: true
+  paths-to-match: /**
