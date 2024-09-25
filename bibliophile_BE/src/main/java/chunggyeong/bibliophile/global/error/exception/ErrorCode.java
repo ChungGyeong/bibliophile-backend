@@ -36,6 +36,7 @@ public enum ErrorCode {
     BOOKMARK_NOT_FOUND(404, "해당하는 즐겨찾기 정보를 찾을 수 없습니다."),
     MY_BOOK_NOT_FOUND(404, "해당하는 나의 책 정보를 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(404, "해당하는 리뷰 정보를 찾을 수 없습니다."),
+    MEMO_NOT_FOUND(404, "해당하는 메모 정보를 찾을 수 없습니다."),
 
     /* 409 중복된 리소스 */
     USER_DUPLICATION(409, "이미 가입된 사용자입니다."),

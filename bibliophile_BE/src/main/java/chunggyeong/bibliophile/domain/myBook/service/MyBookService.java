@@ -86,8 +86,8 @@ public class MyBookService implements MyBookServiceUtils{
 
     // 나의 책 현재까지 읽은 페이지 변경
     @Transactional
-    public MyBookResponse updateMyBook(UpdateMyBookRequest updateMyBookRequest) {
-        MyBook myBook = queryMyBook(updateMyBookRequest.myBookId());
+    public MyBookResponse updateMyBook(Long myBookId, UpdateMyBookRequest updateMyBookRequest) {
+        MyBook myBook = queryMyBook(myBookId);
         User user = userUtils.getUserFromSecurityContext();
 
         validUserIsHost(myBook, user);
@@ -117,8 +117,8 @@ public class MyBookService implements MyBookServiceUtils{
 
     // 나의 책 상태 변경
     @Transactional
-    public MyBookResponse updateMyBookStatus(UpdateMyBookStatusRequest updateMyBookStatusRequest) {
-        MyBook myBook = queryMyBook(updateMyBookStatusRequest.myBookId());
+    public MyBookResponse updateMyBookStatus(Long myBookId, UpdateMyBookStatusRequest updateMyBookStatusRequest) {
+        MyBook myBook = queryMyBook(myBookId);
         User user = userUtils.getUserFromSecurityContext();
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);

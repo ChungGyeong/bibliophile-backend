@@ -14,11 +14,11 @@ public record UserProfileResponse(
     String nickname,
     Gender gender,
     LocalDate birthday,
-    List<Classification> classification,
+    List<String> classification,
     String profileImage,
     OauthServerType oauthServerType
 ) {
-    public UserProfileResponse(User user, List<Classification> classification) {
+    public UserProfileResponse(User user, List<String> classification) {
         this(user.getId(), user.getEmail(), user.getNickname(), user.getGender(), user.getBirthday(),
                 classification, user.getProfileImageUrl(), user.getOauthServerType());
     }
