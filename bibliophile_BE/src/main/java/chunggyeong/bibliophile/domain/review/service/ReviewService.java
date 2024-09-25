@@ -72,8 +72,8 @@ public class ReviewService implements ReviewServiceUtils{
 
     // 리뷰 수정
     @Transactional
-    public ReviewResponse updateReview(UpdateReviewRequest updateReviewRequest) {
-        Review review = queryReview(updateReviewRequest.reviewId());
+    public ReviewResponse updateReview(Long reviewId, UpdateReviewRequest updateReviewRequest) {
+        Review review = queryReview(reviewId);
         User user = userUtils.getUserFromSecurityContext();
 
         review.validUserIsHost(user);

@@ -16,6 +16,7 @@ import chunggyeong.bibliophile.domain.user.presentation.dto.request.SignUpUserRe
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.UpdateUserRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.CheckNicknameResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserProfileResponse;
+import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserWordCloudResponse;
 import chunggyeong.bibliophile.global.security.JwtTokenProvider;
 import chunggyeong.bibliophile.global.utils.security.SecurityUtils;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,6 +63,8 @@ public class UserService {
 
         addClassification(classificationList, user);
 
+        List<String> classificationStringList = convertClassificationToStringList(classificationList);
+
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
 
@@ -69,7 +73,7 @@ public class UserService {
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
 
-        return new UserProfileResponse(user, classificationList);
+        return new UserProfileResponse(user, classificationStringList);
     }
 
 
@@ -93,8 +97,9 @@ public class UserService {
         User user = userUtils.getUserFromSecurityContext();
 
         List<Classification> classificationList = interestServiceUtils.findInterestsByUser(user);
+        List<String> classificationStringList = convertClassificationToStringList(classificationList);
 
-        return new UserProfileResponse(user, classificationList);
+        return new UserProfileResponse(user, classificationStringList);
     }
 
     //회원 정보 수정
@@ -112,8 +117,9 @@ public class UserService {
         addClassification(updateUserRequest.classification(), user);
 
         List<Classification> updateClassificationList = interestServiceUtils.findInterestsByUser(user);
+        List<String> classificationStringList = convertClassificationToStringList(updateClassificationList);
 
-        return new UserProfileResponse(user, updateClassificationList);
+        return new UserProfileResponse(user, classificationStringList);
     }
 
     // 회원 탈퇴
@@ -129,6 +135,13 @@ public class UserService {
 
         jwtTokenProvider.setHeaderAccessTokenEmpty(response);
         jwtTokenProvider.setHeaderRefreshTokenEmpty(response);
+    }
+
+    // 워드클라우드 조회
+    public UserWordCloudResponse getWordCloud() {
+        User user = userUtils.getUserFromSecurityContext();
+
+        return new UserWordCloudResponse(user.getWordCloudImgUrl());
     }
 
     // 회원가입 시 검증
@@ -157,5 +170,12 @@ public class UserService {
         classificationList.forEach(classification ->
                 interestServiceUtils.addInterest(user, classification)
         );
+    }
+
+    // 관심사 타입 변경
+    private List<String> convertClassificationToStringList(List<Classification> classificationList) {
+        return classificationList.stream()
+                .map(Classification::getValue)
+                .collect(Collectors.toList());
     }
 }

@@ -42,9 +42,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정")
-    @PatchMapping()
-    public ReviewResponse updateReview(@RequestBody @Valid UpdateReviewRequest updateReviewRequest) {
-        return reviewService.updateReview(updateReviewRequest);
+    @PatchMapping("/{reviewId}")
+    public ReviewResponse updateReview(@PathVariable Long reviewId, @RequestBody @Valid UpdateReviewRequest updateReviewRequest) {
+        return reviewService.updateReview(reviewId, updateReviewRequest);
     }
 
     @Operation(summary = "리뷰 삭제")

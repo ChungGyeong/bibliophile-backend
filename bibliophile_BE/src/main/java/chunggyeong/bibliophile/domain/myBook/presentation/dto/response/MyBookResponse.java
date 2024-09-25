@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 public record MyBookResponse(
         Long myBookId,
+        Long bookId,
         int totalPage,
         int readingPage,
         int readingPercent,
@@ -24,7 +25,7 @@ public record MyBookResponse(
         LocalDateTime lastModifyDate
 ) {
     public MyBookResponse(MyBook myBook, Book book, String totalReadingTime, int readingPercent, boolean isBookmarked) {
-        this(myBook.getId(), book.getPage(), myBook.getReadingPage(), readingPercent, totalReadingTime,
+        this(myBook.getId(), myBook.getBook().getId(), book.getPage(), myBook.getReadingPage(), readingPercent, totalReadingTime,
                 myBook.getReadingStatus(), isBookmarked, book.getTitle(), book.getThumbnail(), book.getAuthors(),
                 book.getPublisher(), book.getContents(), myBook.getCompletionReadingTime(), myBook.getCreatedDate(),
                 myBook.getLastModifyDate());

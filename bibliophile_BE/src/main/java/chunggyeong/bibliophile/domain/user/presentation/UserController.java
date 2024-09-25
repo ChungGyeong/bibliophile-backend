@@ -5,6 +5,7 @@ import chunggyeong.bibliophile.domain.user.presentation.dto.request.SignUpUserRe
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.UpdateUserRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.CheckNicknameResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserProfileResponse;
+import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserWordCloudResponse;
 import chunggyeong.bibliophile.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -33,7 +34,7 @@ public class UserController {
 
     @SecurityRequirements
     @Operation(summary = "닉네임 중복 확인")
-    @GetMapping("/check-nickname")
+    @PostMapping("/check-nickname")
     public CheckNicknameResponse checkNickname(@RequestBody CheckNicknameRequest nicknameCheckRequest) {
         return userService.checkNickname(nicknameCheckRequest);
     }
@@ -60,5 +61,11 @@ public class UserController {
     @DeleteMapping
     public void withdraw(HttpServletResponse response) {
         userService.withdraw(response);
+    }
+
+    @Operation(summary = "워드 클라우드 조회")
+    @GetMapping("/word-cloud")
+    public UserWordCloudResponse getWordCloud() {
+        return userService.getWordCloud();
     }
 }

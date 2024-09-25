@@ -19,7 +19,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,6 +36,13 @@ public class FileService implements FileServiceUtils {
 
     private static final int IMAGE_SIZE = 50;
     private final AmazonS3 amazonS3;
+
+    @Override
+    public List<UploadFileResponse> uploadImages(List<MultipartFile> files) {
+        return files.stream()
+                .map(this::uploadImage)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public UploadFileResponse uploadImage(MultipartFile file) {

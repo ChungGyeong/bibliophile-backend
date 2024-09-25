@@ -42,9 +42,9 @@ public class MyBookController {
     }
 
     @Operation(summary = "나의 책 현재까지 읽은 페이지 변경")
-    @PatchMapping("/page")
-    public MyBookResponse updateMyBook(@RequestBody @Valid UpdateMyBookRequest updateMyBookRequest) {
-        return myBookService.updateMyBook(updateMyBookRequest);
+    @PatchMapping("/page/{myBookId}")
+    public MyBookResponse updateMyBook(@PathVariable Long myBookId, @RequestBody @Valid UpdateMyBookRequest updateMyBookRequest) {
+        return myBookService.updateMyBook(myBookId, updateMyBookRequest);
     }
 
     @Operation(summary = "나의 책 삭제")
@@ -54,9 +54,9 @@ public class MyBookController {
     }
 
     @Operation(summary = "나의 책 상태 변경")
-    @PatchMapping("/status")
-    public MyBookResponse updateMyBookStatus(@RequestBody @Valid UpdateMyBookStatusRequest updateMyBookStatusRequest) {
-        return myBookService.updateMyBookStatus(updateMyBookStatusRequest);
+    @PatchMapping("/status/{myBookId}")
+    public MyBookResponse updateMyBookStatus(@PathVariable Long myBookId, @RequestBody @Valid UpdateMyBookStatusRequest updateMyBookStatusRequest) {
+        return myBookService.updateMyBookStatus(myBookId, updateMyBookStatusRequest);
     }
 
     @Operation(summary = "나의 책 리스트 조회")

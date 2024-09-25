@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Tag(name = "파일", description = "파일 관련 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/file")
@@ -23,7 +25,7 @@ public class FileController {
     @SecurityRequirements
     @Operation(summary = "이미지 업로드")
     @PostMapping("/image")
-    public UploadFileResponse uploadImage(@RequestPart(value = "file") MultipartFile file) {
-        return fileService.uploadImage(file);
+    public List<UploadFileResponse> uploadImage(@RequestPart(value = "files") List<MultipartFile> files) {
+        return fileService.uploadImages(files);
     }
 }
