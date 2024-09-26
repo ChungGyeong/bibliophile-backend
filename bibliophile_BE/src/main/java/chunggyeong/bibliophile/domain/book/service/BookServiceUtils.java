@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface BookServiceUtils {
 
-    Page<BookResponse> findBookByTitle(String title, Pageable pageable);
+    Page<BookResponse> findBooksByTitle(String title, Pageable pageable);
 
     BookResponse findBookByIsbn(String isbn);
 
     Book queryBook(Long id);
+
+    Page<BookResponse> findPopularBooksByAgeAndGender(Pageable pageable);
 }
