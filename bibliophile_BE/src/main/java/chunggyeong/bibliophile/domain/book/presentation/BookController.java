@@ -18,11 +18,17 @@ public class BookController {
 
     private final BookService bookService;
 
+    @Operation(summary= "연령 및 성별에 따른 인기 도서 추천")
+    @GetMapping("")
+    public List<BookResponse> recommandBookListByAgeAndGender(@PageableDefault(size = 6, sort = "id") Pageable pageable) {
+        return bookService.findPopularBooksByAgeAndGender(pageable).stream().toList();
+    }
+
     @Operation(summary = "제목 기반 책 검색")
     @GetMapping("/search")
     public List<BookResponse> searchBookListByTitle(@RequestParam String title,
                                                     @PageableDefault(size = 6, sort = "id") Pageable pageable) {
-        return bookService.findBookByTitle(title, pageable).stream().toList();
+        return bookService.findBooksByTitle(title, pageable).stream().toList();
     }
 
     @Operation(summary = "isbn 기반 책 검색")
