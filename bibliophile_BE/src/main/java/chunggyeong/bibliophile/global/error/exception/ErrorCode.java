@@ -46,6 +46,7 @@ public enum ErrorCode {
     BOOKMARK_DUPLICATION(409, "이미 등록한 즐겨찾기입니다."),
     BOOKREVIEW_DUPLICATION(409,"이미 등록한 리뷰입니다."),
     REVIEW_DUPLICATION(409, "해당 책에 이미 리뷰를 작성했습니다."),
+    BOOK_REPORT_EXIST(409,"이미 등록된 독후감이 존재합니다."),
     MY_BOOK_DUPLICATION(409, "해당 책을 이미 읽고 있습니다."),
 
     /* 429 요청 횟수 초과 */

@@ -3,6 +3,7 @@ package chunggyeong.bibliophile.domain.bookreport.service;
 import chunggyeong.bibliophile.domain.bookreport.domain.BookReport;
 import chunggyeong.bibliophile.domain.bookreport.domain.repository.BookReportRepository;
 import chunggyeong.bibliophile.domain.bookreport.exception.BookReportNotFoundException;
+import chunggyeong.bibliophile.domain.bookreport.exception.ExistBookReportException;
 import chunggyeong.bibliophile.domain.bookreport.presentation.dto.request.AddBookReportRequest;
 import chunggyeong.bibliophile.domain.bookreport.presentation.dto.request.UpdateBookReportRequest;
 import chunggyeong.bibliophile.domain.bookreport.presentation.dto.response.BookReportResponse;
@@ -37,6 +38,7 @@ public class BookReportService implements BookReportServiceUtils {
         MyBook myBook = myBookServiceUtils.queryMyBook(addBookReportRequest.myBookId());
 
         myBookServiceUtils.validUserIsHost(myBook, user);
+        existsByMyBook(user,myBook);
 
         BookReport bookReport = BookReport.createBookReport(addBookReportRequest.content(), myBook);
         bookReportRepository.save(bookReport);
@@ -51,6 +53,20 @@ public class BookReportService implements BookReportServiceUtils {
     // 독후감 단건 조회
     public BookReportResponse findBookReportByBookId(Long bookReportId){
         BookReport bookReport = queryBookReport(bookReportId);
+        List<String> bookReportImgUrlList = bookReport.getBookReportImgList().stream()
+                .map(BookReportImg::getImgUrl)
+                .toList();
+        return new BookReportResponse(bookReport, bookReportImgUrlList);
+    }
+
+    // 내가 작성한 독후감 조회
+    public BookReportResponse findBookReportByUserAndMyBookId(Long myBookId){
+        MyBook myBook = myBookServiceUtils.queryMyBook(myBookId);
+        User user = userUtils.getUserFromSecurityContext();
+
+        myBookServiceUtils.validUserIsHost(myBook, user);
+
+        BookReport bookReport = bookReportRepository.findByMyBook(myBook);
         List<String> bookReportImgUrlList = bookReport.getBookReportImgList().stream()
                 .map(BookReportImg::getImgUrl)
                 .toList();
@@ -87,6 +103,13 @@ public class BookReportService implements BookReportServiceUtils {
     @Override
     public BookReport queryBookReport(Long bookReportId) {
         return bookReportRepository.findById(bookReportId).orElseThrow(() -> BookReportNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public void existsByMyBook(User user, MyBook myBook) {
+        if(bookReportRepository.existsByUserAndMyBook(user,myBook)){
+            throw ExistBookReportException.EXCEPTION;
+        }
     }
 
 }

@@ -30,6 +30,12 @@ public class BookReportController {
         return bookReportService.findBookReportByBookId(bookReportId);
     }
 
+    @Operation(summary = "내가 작성한 독후감 조회")
+    @GetMapping("/mine/{myBookId}")
+    public BookReportResponse findBookReportByUserAndMyBookId(@PathVariable Long myBookId) {
+        return bookReportService.findBookReportByUserAndMyBookId(myBookId);
+    }
+
     @Operation(summary = "독후감 수정")
     @PatchMapping("/{bookReportId}")
     public BookReportResponse updateBookReport(@PathVariable Long bookReportId, @RequestBody @Valid UpdateBookReportRequest updateBookReportRequest) {
