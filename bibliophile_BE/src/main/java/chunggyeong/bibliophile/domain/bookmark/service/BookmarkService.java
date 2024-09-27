@@ -66,6 +66,14 @@ public class BookmarkService implements BookmarkServiceUtils{
     }
 
     @Override
+    @Transactional
+    public void deleteBookmarkByExist(boolean exist, User user, Book book) {
+        if (exist) {
+            bookmarkRepository.deleteByUserAndBook(user, book);
+        }
+    }
+
+    @Override
     public Bookmark queryBookmark(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(() -> BookmarkNotFoundException.EXCEPTION);
     }

@@ -1,5 +1,6 @@
 package chunggyeong.bibliophile.domain.myBook.presentation;
 
+import chunggyeong.bibliophile.domain.file.presentation.dto.response.UploadFileResponse;
 import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.AddMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookRequest;
@@ -35,7 +36,7 @@ public class MyBookController {
         return myBookService.findMyBookByMyBookId(myBookId);
     }
 
-    @Operation(summary = "나의 책 단건 조회")
+    @Operation(summary = "나의 책장에서 보기")
     @GetMapping("/book/{bookId}")
     public MyBookResponse findMyBookByBookId(@PathVariable Long bookId) {
         return myBookService.findMyBookByBookId(bookId);
@@ -65,9 +66,15 @@ public class MyBookController {
         return myBookService.findMyBooksByStatus(readingStatus);
     }
 
-    @Operation(summary = "나의 책 리스트 조회")
+    @Operation(summary = "나의 책 분야별 통계 조회")
     @GetMapping("/statistics")
     public List<MyBookCountByKDC> findMyBooksStatistics() {
         return myBookService.findMyBooksStatistics();
+    }
+
+    @Operation(summary = "테스트")
+    @GetMapping("/test")
+    public UploadFileResponse sendBookSummaries() {
+        return myBookService.sendBookSummaries();
     }
 }
