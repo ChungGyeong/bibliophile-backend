@@ -36,6 +36,7 @@ public enum ErrorCode {
     BOOKMARK_NOT_FOUND(404, "해당하는 즐겨찾기 정보를 찾을 수 없습니다."),
     MY_BOOK_NOT_FOUND(404, "해당하는 나의 책 정보를 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(404, "해당하는 리뷰 정보를 찾을 수 없습니다."),
+    BOOK_REPORT_NOT_FOUND(404,"해당하는 독후감 정보를 찾을 수 없습니다."),
     MEMO_NOT_FOUND(404, "해당하는 메모 정보를 찾을 수 없습니다."),
 
     /* 409 중복된 리소스 */
@@ -43,6 +44,7 @@ public enum ErrorCode {
     NICKNAME_DUPLICATION(409, "이미 사용중인 닉네임입니다."),
     INTEREST_DUPLICATION(409, "이미 등록한 관심사입니다."),
     BOOKMARK_DUPLICATION(409, "이미 등록한 즐겨찾기입니다."),
+    BOOKREVIEW_DUPLICATION(409,"이미 등록한 리뷰입니다."),
     REVIEW_DUPLICATION(409, "해당 책에 이미 리뷰를 작성했습니다."),
     MY_BOOK_DUPLICATION(409, "해당 책을 이미 읽고 있습니다."),
 
