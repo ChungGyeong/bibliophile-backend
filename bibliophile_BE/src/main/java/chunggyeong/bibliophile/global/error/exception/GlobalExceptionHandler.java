@@ -2,6 +2,7 @@ package chunggyeong.bibliophile.global.error.exception;
 
 import chunggyeong.bibliophile.global.error.ErrorResponse;
 import chunggyeong.bibliophile.global.error.ValidErrorResponse;
+import chunggyeong.bibliophile.global.slack.SlackService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
+    private final SlackService slackService;
+
     @ExceptionHandler(MainException.class)
     public ResponseEntity<ErrorResponse> mainExceptionHandler(
             MainException e, HttpServletRequest request) throws IOException {
@@ -31,6 +34,8 @@ public class GlobalExceptionHandler {
                 new ErrorResponse(
                         code.getStatus(),
                         code.getReason());
+
+        sendSlackMessage(e, code);
 
         return ResponseEntity.status(HttpStatus.valueOf(code.getStatus())).body(errorResponse);
     }
@@ -45,6 +50,8 @@ public class GlobalExceptionHandler {
                 new ErrorResponse(
                         internalServerError.getStatus(),
                         internalServerError.getReason());
+
+        sendSlackMessage(e, internalServerError);
 
         return ResponseEntity.status(HttpStatus.valueOf(internalServerError.getStatus()))
                 .body(errorResponse);
@@ -67,6 +74,8 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
 
+        sendSlackMessage(ex, ErrorCode.BAD_REQUEST);
+
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
@@ -79,7 +88,17 @@ public class GlobalExceptionHandler {
                         internalServerError.getStatus(),
                         internalServerError.getReason());
 
+        sendSlackMessage(e, ErrorCode.MISSING_PARAMS);
+
         return ResponseEntity.status(HttpStatus.valueOf(internalServerError.getStatus()))
                 .body(errorResponse);
+    }
+
+    private void sendSlackMessage(Exception e, ErrorCode errorCode) {
+        HashMap<String, String> message = new HashMap<>();
+        String errorMessage = e.getMessage() == null ? errorCode.getReason() : e.getMessage();
+        message.put("예외 로그", errorMessage);
+        log.info("예외 로그 : " + errorMessage);
+        slackService.sendMessage(errorCode.getReason(), message);
     }
 }
