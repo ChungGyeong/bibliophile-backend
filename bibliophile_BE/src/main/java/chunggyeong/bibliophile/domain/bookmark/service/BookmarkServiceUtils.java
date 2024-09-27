@@ -9,4 +9,6 @@ public interface BookmarkServiceUtils {
     Bookmark queryBookmark(Long bookmarkId);
 
     boolean existsByUserAndBook(User user, Book book);
+
+    void deleteBookmarkByExist(boolean exist, User user, Book book);
 }

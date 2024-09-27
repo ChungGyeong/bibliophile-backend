@@ -3,6 +3,8 @@ package chunggyeong.bibliophile.domain.myBook.service;
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.service.BookServiceUtils;
 import chunggyeong.bibliophile.domain.bookmark.service.BookmarkServiceUtils;
+import chunggyeong.bibliophile.domain.file.presentation.dto.response.UploadFileResponse;
+import chunggyeong.bibliophile.domain.file.service.FileServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
@@ -17,10 +19,19 @@ import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -36,6 +47,8 @@ public class MyBookService implements MyBookServiceUtils{
     private final UserUtils userUtils;
     private final BookServiceUtils bookServiceUtils;
     private final BookmarkServiceUtils bookmarkServiceUtils;
+    private final RestTemplate restTemplate;
+    private final FileServiceUtils fileServiceUtils;
 
     // 나의 책 등록
     @Transactional
@@ -51,6 +64,8 @@ public class MyBookService implements MyBookServiceUtils{
         myBookRepository.save(myBook);
 
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
+
+        bookmarkServiceUtils.deleteBookmarkByExist(isBookmarked, user, book);
 
         return new MyBookResponse(myBook, book, "0:0:0", 0, isBookmarked);
     }
@@ -166,6 +181,43 @@ public class MyBookService implements MyBookServiceUtils{
         return kdcCountMap.entrySet().stream()
                 .map(entry -> new MyBookCountByKDC(entry.getKey(), entry.getValue().intValue()))
                 .collect(Collectors.toList());
+    }
+
+    // 빅데이터 서버로 내가 읽은 책 줄거리 리스트 전송
+    @Transactional
+    public UploadFileResponse sendBookSummaries() {
+        User user = userUtils.getUserFromSecurityContext();
+        List<String> contentList = myBookRepository.findAllByUser(user).stream()
+                .map(myBook -> myBook.getBook().getContents())
+                .collect(Collectors.toList());
+
+        log.info(String.valueOf(contentList.size()));
+
+        UploadFileResponse uploadFileResponse = sendWordCloudData(contentList);
+
+        user.updateWordCloudImgUrl(uploadFileResponse.url());
+
+        return uploadFileResponse;
+    }
+
+    public UploadFileResponse sendWordCloudData(List<String> content) {
+        String url = "https://j11b204.p.ssafy.io/recommend/wordcloud";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("content", content);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<byte[]> response = restTemplate.postForEntity(url, requestEntity, byte[].class);
+
+        byte[] imageBytes = response.getBody();
+
+        MultipartFile multipartFile = new MockMultipartFile("wordcloud.png", "wordcloud.png", "image/png", imageBytes);
+
+        return fileServiceUtils.uploadImage(multipartFile);
     }
 
     public String getTotalTimeFormatted(Duration totalReadingTime) {
