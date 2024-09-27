@@ -71,10 +71,4 @@ public class MyBookController {
     public List<MyBookCountByKDC> findMyBooksStatistics() {
         return myBookService.findMyBooksStatistics();
     }
-
-    @Operation(summary = "테스트")
-    @GetMapping("/test")
-    public UploadFileResponse sendBookSummaries() {
-        return myBookService.sendBookSummaries();
-    }
 }
