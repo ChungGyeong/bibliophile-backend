@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -68,5 +68,18 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingParams(MissingServletRequestParameterException e) {
+        log.error("INTERNAL_SERVER_ERROR", e);
+        ErrorCode internalServerError = ErrorCode.MISSING_PARAMS;
+        ErrorResponse errorResponse =
+                new ErrorResponse(
+                        internalServerError.getStatus(),
+                        internalServerError.getReason());
+
+        return ResponseEntity.status(HttpStatus.valueOf(internalServerError.getStatus()))
+                .body(errorResponse);
     }
 }

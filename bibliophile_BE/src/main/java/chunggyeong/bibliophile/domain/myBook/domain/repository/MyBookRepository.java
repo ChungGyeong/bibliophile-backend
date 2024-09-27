@@ -28,10 +28,12 @@ public interface MyBookRepository extends JpaRepository<MyBook, Long> {
             "JOIN mb.user u " +
             "WHERE FLOOR((YEAR(CURRENT_DATE) - YEAR(u.birthday)) / 10) = :ageGroup " +
             "AND u.gender = :gender " +
-            "GROUP BY mb.book " +
+            "GROUP BY mb, mb.book, mb.completionReadingTime, mb.createdDate, mb.lastModifyDate, " +
+            "mb.readingPage, mb.readingStatus, mb.totalReadingTime, mb.user " +
             "ORDER BY COUNT(mb) DESC")
     Page<MyBook> findAllByAgeAndGenderOrderByMyBookCountDesc(
             @Param("ageGroup") int ageGroup,
             @Param("gender") Gender gender,
             Pageable pageable);
+
 }
