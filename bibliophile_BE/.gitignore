@@ -37,3 +37,4 @@ out/
 .vscode/
 
 application-environment.yml
+logback-variables.properties

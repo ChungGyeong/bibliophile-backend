@@ -1,6 +1,7 @@
 <configuration>
-    <property resource="application-environment.yml" />
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n" />
+<!--    <property resource="application-environment.yml" />-->
+<!--    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n" />-->
+    <property resource="logback-variables.properties" />
 
     <timestamp key="ToDay" datePattern="yyyyMMdd" />
 
