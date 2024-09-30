@@ -13,6 +13,7 @@ public enum ErrorCode {
     FILE_UPLOAD_FAIL(400, "파일 업로드에 실패하였습니다."),
     PAGE_LIMIT_EXCEEDED(400, "해당 책의 페이지를 초과하였습니다."),
     MISSING_PARAMS(400,"필수 파라미터가 누락되었습니다."),
+    BAD_REQUEST(400,"잘못된 입력입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     EXPIRED_TOKEN(401, "토큰이 만료되었습니다."),
