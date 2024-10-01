@@ -14,6 +14,7 @@ public enum ErrorCode {
     PAGE_LIMIT_EXCEEDED(400, "해당 책의 페이지를 초과하였습니다."),
     MISSING_PARAMS(400,"필수 파라미터가 누락되었습니다."),
     BAD_REQUEST(400,"잘못된 입력입니다."),
+    NO_FEED_AVAILABLE(400,"여우에게 줄 수 있는 먹이가 없습니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     EXPIRED_TOKEN(401, "토큰이 만료되었습니다."),

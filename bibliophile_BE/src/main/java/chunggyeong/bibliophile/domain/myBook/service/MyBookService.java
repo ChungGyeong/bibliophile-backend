@@ -5,6 +5,8 @@ import chunggyeong.bibliophile.domain.book.service.BookServiceUtils;
 import chunggyeong.bibliophile.domain.bookmark.service.BookmarkServiceUtils;
 import chunggyeong.bibliophile.domain.file.presentation.dto.response.UploadFileResponse;
 import chunggyeong.bibliophile.domain.file.service.FileServiceUtils;
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.service.FoxServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
@@ -30,7 +32,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class MyBookService implements MyBookServiceUtils{
     private final BookmarkServiceUtils bookmarkServiceUtils;
     private final RestTemplate restTemplate;
     private final FileServiceUtils fileServiceUtils;
+    private final FoxServiceUtils foxServiceUtils;
 
     // 나의 책 등록
     @Transactional
@@ -143,6 +145,11 @@ public class MyBookService implements MyBookServiceUtils{
         validUserIsHost(myBook, user);
 
         myBook.updateReadingStatus(updateMyBookStatusRequest.status());
+
+        if(updateMyBookStatusRequest.status().equals(ReadingStatus.READ)){
+            Fox fox = foxServiceUtils.queryFoxByUser(user);
+            fox.updateAddFoxFeedCount();
+        }
 
         return new MyBookResponse(myBook, book, totalReadingTime, readingTime, isBookmarked);
     }

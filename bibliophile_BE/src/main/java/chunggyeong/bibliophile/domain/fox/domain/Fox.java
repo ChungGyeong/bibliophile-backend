@@ -1,5 +1,6 @@
 package chunggyeong.bibliophile.domain.fox.domain;
 
+import chunggyeong.bibliophile.domain.fox.exception.NoFeedAvailableException;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.database.BaseEntity;
 import jakarta.persistence.*;
@@ -38,7 +39,7 @@ public class Fox extends BaseEntity {
     @Builder
     public Fox(User user) {
         this.level = 0;
-        this.exp = 1;
+        this.exp = 0;
         this.feedCount = 0;
         this.type = FoxType.BABY;
         this.status = FoxStatus.GOOD;
@@ -52,27 +53,35 @@ public class Fox extends BaseEntity {
     }
 
     public void updateFeedCount() {
-        this.feedCount++;
+        if(this.feedCount<=0){
+            throw NoFeedAvailableException.EXCEPTION;
+        }
+        this.feedCount--;
+        this.exp++;
 
-        if(this.level<3 && this.feedCount==1){
+        if(this.level<3 && this.exp==1){
             levelUp();
         }
-        else if(this.level>=3 && this.level<=9 && this.feedCount==3){
+        else if(this.level>=3 && this.level<=9 && this.exp==3){
             levelUp();
         }
-        else if(this.level>=10 && this.feedCount==5){
+        else if(this.level>=10 && this.exp==5){
             levelUp();
         }
     }
 
     public void levelUp(){
         this.level++;
-        this.feedCount=0;
+        this.exp=0;
         this.status = FoxStatus.GOOD;
     }
 
     public void updateFoxStatus(FoxStatus status) {
         this.status = status;
+    }
+
+    public void updateAddFoxFeedCount(){
+        this.feedCount++;
     }
 
 }
