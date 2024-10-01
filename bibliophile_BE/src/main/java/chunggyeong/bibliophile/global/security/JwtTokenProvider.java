@@ -165,8 +165,8 @@ public class JwtTokenProvider {
         accessTokenCookie.setPath("/");
         accessTokenCookie.setHttpOnly(true);
 
-        response.addCookie(accessTokenCookie);
-        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN=" + accessToken + "; Max-Age=86400; Path=/; HttpOnly; SameSite=None");
+//        response.addCookie(accessTokenCookie);
+        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN=" + accessToken + "; Max-Age=86400; Path=/; HttpOnly; Secure; SameSite=None");
     }
 
     public void setHeaderAccessTokenEmpty(HttpServletResponse response) {
@@ -175,8 +175,8 @@ public class JwtTokenProvider {
         accessTokenCookie.setPath("/");
         accessTokenCookie.setHttpOnly(true);
 
-        response.addCookie(accessTokenCookie);
-        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN=; Max-Age=0; Path=/; HttpOnly; SameSite=None");
+//        response.addCookie(accessTokenCookie);
+        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=None");
     }
 
     // RefreshToken 헤더 설정
@@ -186,8 +186,8 @@ public class JwtTokenProvider {
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setHttpOnly(true);
 
-        response.addCookie(refreshTokenCookie);
-        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN_REFRESH=" + refreshToken + "; Max-Age=604800; Path=/; HttpOnly; SameSite=None");
+//        response.addCookie(refreshTokenCookie);
+        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN_REFRESH=" + refreshToken + "; Max-Age=604800; Path=/; HttpOnly; Secure; SameSite=None");
     }
 
     public void setHeaderRefreshTokenEmpty(HttpServletResponse response) {
@@ -196,8 +196,8 @@ public class JwtTokenProvider {
         refreshTokenCookie.setPath("/");
         refreshTokenCookie.setHttpOnly(true);
 
-        response.addCookie(refreshTokenCookie);
-        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN_REFRESH=; Max-Age=0; Path=/; HttpOnly; SameSite=None");
+//        response.addCookie(refreshTokenCookie);
+        response.addHeader("Set-Cookie", "BIBLIOPHILE_TOKEN_REFRESH=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=None");
     }
 
     public Long getRefreshTokenTTlSecond() {
