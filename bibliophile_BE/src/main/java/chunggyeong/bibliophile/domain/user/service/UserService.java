@@ -1,5 +1,7 @@
 package chunggyeong.bibliophile.domain.user.service;
 
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.domain.repository.FoxRepository;
 import chunggyeong.bibliophile.domain.interest.domain.Classification;
 import chunggyeong.bibliophile.domain.interest.exception.DuplicateClassificationException;
 import chunggyeong.bibliophile.domain.interest.exception.InterestLimitExceededException;
@@ -42,6 +44,7 @@ public class UserService {
     private final InterestServiceUtils interestServiceUtils;
     private final UserUtils userUtils;
     private final OauthServiceUtils oauthServiceUtils;
+    private final FoxRepository foxRepository;
 
     // 회원 가입
     @Transactional
@@ -64,6 +67,9 @@ public class UserService {
         addClassification(classificationList, user);
 
         List<String> classificationStringList = convertClassificationToStringList(classificationList);
+
+        Fox fox = Fox.createFox(user);
+        foxRepository.save(fox);
 
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());

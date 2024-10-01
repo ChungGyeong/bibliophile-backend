@@ -40,6 +40,7 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(404, "해당하는 리뷰 정보를 찾을 수 없습니다."),
     BOOK_REPORT_NOT_FOUND(404,"해당하는 독후감 정보를 찾을 수 없습니다."),
     MEMO_NOT_FOUND(404, "해당하는 메모 정보를 찾을 수 없습니다."),
+    FOX_NOT_FOUND(404,"내 계정에 속해있는 여우를 찾을 수 없습니다."),
 
     /* 409 중복된 리소스 */
     USER_DUPLICATION(409, "이미 가입된 사용자입니다."),
@@ -50,6 +51,7 @@ public enum ErrorCode {
     REVIEW_DUPLICATION(409, "해당 책에 이미 리뷰를 작성했습니다."),
     BOOK_REPORT_EXIST(409,"이미 등록된 독후감이 존재합니다."),
     MY_BOOK_DUPLICATION(409, "해당 책을 이미 읽고 있습니다."),
+    ALREADY_HAS_FOX(409,"이미 생성된 내 여우가 존재합니다."),
 
     /* 429 요청 횟수 초과 */
     MAX_INTEREST_LIMIT_EXCEEDED(429, "등록 가능한 관심사의 수를 초과했습니다."),
