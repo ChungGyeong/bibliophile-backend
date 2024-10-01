@@ -74,6 +74,12 @@ public class Fox extends BaseEntity {
         this.level++;
         this.exp=0;
         this.status = FoxStatus.GOOD;
+        if(this.level==3){
+            this.type = FoxType.ADULT;
+        }
+        else if(this.level==10){
+            this.type = FoxType.ADULT;
+        }
     }
 
     public void updateFoxStatus(FoxStatus status) {

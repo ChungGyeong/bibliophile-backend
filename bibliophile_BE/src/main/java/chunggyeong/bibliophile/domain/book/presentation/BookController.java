@@ -37,4 +37,9 @@ public class BookController {
         return bookService.findBookByIsbn(isbn);
     }
 
+    @Operation(summary = "Book ID 기반 책 검색")
+    @GetMapping("/{bookId}")
+    public BookResponse searchBookById(@PathVariable Long bookId) {
+        return bookService.findBookByBookId(bookId);
+    }
 }

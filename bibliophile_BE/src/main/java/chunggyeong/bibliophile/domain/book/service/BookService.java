@@ -40,6 +40,11 @@ public class BookService implements BookServiceUtils {
                 .map(BookResponse::new);
     }
 
+    public BookResponse findBookByBookId(Long bookId) {
+        Book book = queryBook(bookId);
+        return new BookResponse(book);
+    }
+
     @Override
     public Book queryBook(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> BookNotFoundException.EXCEPTION);
