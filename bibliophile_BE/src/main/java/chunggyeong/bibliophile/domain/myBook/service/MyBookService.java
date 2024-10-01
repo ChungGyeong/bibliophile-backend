@@ -17,6 +17,7 @@ import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBo
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookStatusRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
+import chunggyeong.bibliophile.domain.streak.service.StreakService;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,7 @@ public class MyBookService implements MyBookServiceUtils{
     private final RestTemplate restTemplate;
     private final FileServiceUtils fileServiceUtils;
     private final FoxServiceUtils foxServiceUtils;
+    private final StreakService streakService;
 
     // 나의 책 등록
     @Transactional
@@ -108,6 +110,8 @@ public class MyBookService implements MyBookServiceUtils{
         User user = userUtils.getUserFromSecurityContext();
 
         validUserIsHost(myBook, user);
+
+        streakService.addStreak(updateMyBookRequest.page()-myBook.getReadingPage());
 
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
 

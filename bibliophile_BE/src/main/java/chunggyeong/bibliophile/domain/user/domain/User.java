@@ -1,10 +1,12 @@
 package chunggyeong.bibliophile.domain.user.domain;
 
 import chunggyeong.bibliophile.domain.bookmark.domain.Bookmark;
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
 import chunggyeong.bibliophile.domain.interest.domain.Interest;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.oauth.domain.OauthServerType;
 import chunggyeong.bibliophile.domain.review.domain.Review;
+import chunggyeong.bibliophile.domain.streak.domain.Streak;
 import chunggyeong.bibliophile.global.database.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -51,6 +53,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Streak> streakList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Fox fox;
 
     @Builder
     public User(String nickname, String email, String profileImageUrl, LocalDate birthday, String wordCloudImgUrl, Gender gender, OauthServerType oauthServerType) {
