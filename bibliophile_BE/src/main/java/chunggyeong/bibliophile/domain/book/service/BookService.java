@@ -36,7 +36,7 @@ public class BookService implements BookServiceUtils {
 
     @Override
     public Page<BookResponse> findBooksByTitle(String title, Pageable pageable) {
-        return bookRepository.findByTitleContaining(title, pageable)
+        return bookRepository.searchByTitleUsingFullText(title, pageable)
                 .map(BookResponse::new);
     }
 
