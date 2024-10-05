@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Book {
 
     @Id
-    @Column
+    @Column(name = "book_id")
     private Long id;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
