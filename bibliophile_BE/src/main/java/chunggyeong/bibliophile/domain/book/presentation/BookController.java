@@ -42,4 +42,10 @@ public class BookController {
     public BookResponse searchBookById(@PathVariable Long bookId) {
         return bookService.findBookByBookId(bookId);
     }
+
+    @Operation(summary = "외부 API로부터 도서 추천을 받아오기")
+    @GetMapping("/recommend")
+    public List<BookResponse> recommendBooks() {
+        return bookService.findRecommendBooksByUserInterest();
+    }
 }
