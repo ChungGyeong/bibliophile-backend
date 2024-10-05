@@ -1,5 +1,7 @@
 package chunggyeong.bibliophile.domain.book.presentation;
 
+import chunggyeong.bibliophile.domain.book.presentation.dto.request.ContentRecommendationRequest;
+import chunggyeong.bibliophile.domain.book.presentation.dto.request.TagRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.BookResponse;
 import chunggyeong.bibliophile.domain.book.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,9 +45,21 @@ public class BookController {
         return bookService.findBookByBookId(bookId);
     }
 
-    @Operation(summary = "외부 API로부터 도서 추천을 받아오기")
-    @GetMapping("/recommend")
+    @Operation(summary = "유저 정보 기반 도서 추천")
+    @GetMapping("/recommend/user")
     public List<BookResponse> recommendBooks() {
         return bookService.findRecommendBooksByUserInterest();
+    }
+
+    @Operation(summary = "도서 줄거리 기반 도서 추천")
+    @PostMapping("/recommend/content")
+    public List<BookResponse> recommendBooksRelatedContent(@RequestBody ContentRecommendationRequest contentRecommendationRequest) {
+        return bookService.findRecommendBooksRelatedContent(contentRecommendationRequest);
+    }
+
+    @Operation(summary = "도서 태그 기반 도서 추천")
+    @PostMapping("/recommend/tag")
+    public List<BookResponse> recommendBooksRelatedTag(@RequestBody TagRecommendationRequest tagRecommendationRequest) {
+        return bookService.findRecommendBooksRelatedTag(tagRecommendationRequest);
     }
 }

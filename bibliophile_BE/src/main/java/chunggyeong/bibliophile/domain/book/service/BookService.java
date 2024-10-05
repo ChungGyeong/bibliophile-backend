@@ -3,8 +3,12 @@ package chunggyeong.bibliophile.domain.book.service;
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.domain.repository.BookRepository;
 import chunggyeong.bibliophile.domain.book.exception.BookNotFoundException;
+import chunggyeong.bibliophile.domain.book.presentation.dto.request.ContentRecommendationRequest;
+import chunggyeong.bibliophile.domain.book.presentation.dto.request.TagRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.BookResponse;
+import chunggyeong.bibliophile.domain.book.presentation.dto.response.ContentRecommendResponse;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.RecommendResponse;
+import chunggyeong.bibliophile.domain.book.presentation.dto.response.TagRecommendResponse;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
@@ -89,6 +93,81 @@ public class BookService implements BookServiceUtils {
             if (recommendedBooks != null && !recommendedBooks.isEmpty()) {
                 for (String book : recommendedBooks) {
                     Optional<Book> bookOptional = bookRepository.findById(Long.parseLong(book));
+                    if(bookOptional.isPresent()){
+                        books.add(new BookResponse(bookOptional.get()));
+                    }
+                }
+            }
+        }
+        return books;
+    }
+
+    public List<BookResponse> findRecommendBooksRelatedContent(ContentRecommendationRequest contentRecommendationRequest) {
+        User user = userUtils.getUserFromSecurityContext();
+        String url = "https://j11b204.p.ssafy.io/recommend/content?title="
+                +contentRecommendationRequest.title()
+                +"&request_number="
+                +contentRecommendationRequest.requestNumber();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<ContentRecommendResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                ContentRecommendResponse.class
+        );
+
+        List<BookResponse> books = new ArrayList<>();
+        if (response.getBody() != null) {
+            ContentRecommendResponse recommendResponse = response.getBody();
+
+            log.debug("[Spring] user : {}",user);
+            List<String> recommendedTitles = recommendResponse.recommendations();
+            if (recommendedTitles != null && !recommendedTitles.isEmpty()) {
+                for (String title : recommendedTitles) {
+                    Optional<Book> bookOptional = bookRepository.findFirstByTitle(title);
+                    if(bookOptional.isPresent()){
+                        books.add(new BookResponse(bookOptional.get()));
+                    }
+                }
+            }
+        }
+        return books;
+    }
+
+    public List<BookResponse> findRecommendBooksRelatedTag(TagRecommendationRequest tagRecommendationRequest) {
+        User user = userUtils.getUserFromSecurityContext();
+        String url = "https://j11b204.p.ssafy.io/recommend/tag";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("id",tagRecommendationRequest.id());
+        requestBody.put("tags",tagRecommendationRequest.tags());
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<TagRecommendResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                TagRecommendResponse.class
+        );
+
+        List<BookResponse> books = new ArrayList<>();
+        if (response.getBody() != null) {
+            TagRecommendResponse recommendResponse = response.getBody();
+
+            log.debug("[Spring] user : {}",user);
+            List<String> recommendedBookTitles = recommendResponse.recommendations();
+            if (recommendedBookTitles != null && !recommendedBookTitles.isEmpty()) {
+                for (String title : recommendedBookTitles) {
+                    Optional<Book> bookOptional = bookRepository.findFirstByTitle(title);
                     if(bookOptional.isPresent()){
                         books.add(new BookResponse(bookOptional.get()));
                     }

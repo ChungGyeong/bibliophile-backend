@@ -17,5 +17,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "SELECT * FROM books WHERE MATCH(title) AGAINST(?1 IN BOOLEAN MODE)", nativeQuery = true)
     Page<Book> searchByTitleUsingFullText(String title, Pageable pageable);
 
-    Optional<Book> findByTitle(String title);
+    Optional<Book> findFirstByTitle(String title);
 }
