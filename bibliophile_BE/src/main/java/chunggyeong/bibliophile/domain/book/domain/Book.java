@@ -14,11 +14,11 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "book")
+@Table(name = "books")
 public class Book {
 
     @Id
-    @Column(name = "book_id")
+    @Column
     private Long id;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
