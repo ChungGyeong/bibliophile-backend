@@ -9,6 +9,7 @@ import chunggyeong.bibliophile.domain.book.presentation.dto.response.BookRespons
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.ContentRecommendResponse;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.RecommendResponse;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.TagRecommendResponse;
+import chunggyeong.bibliophile.domain.bookmark.domain.repository.BookmarkRepository;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
 import chunggyeong.bibliophile.domain.user.domain.Gender;
 import chunggyeong.bibliophile.domain.user.domain.User;
@@ -34,23 +35,28 @@ public class BookService implements BookServiceUtils {
     private final MyBookRepository myBookRepository;
     private final UserUtils userUtils;
     private final RestTemplate restTemplate;
+    private final BookmarkRepository bookmarkRepository;
 
     @Override
     public BookResponse findBookByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> BookNotFoundException.EXCEPTION);
-
-        return new BookResponse(book);
+        User user = userUtils.getUserFromSecurityContext();
+        boolean isBookMarked = existsByUserAndBook(user, book);
+        return new BookResponse(book, isBookMarked);
     }
 
     @Override
     public Page<BookResponse> findBooksByTitle(String title, Pageable pageable) {
+        User user = userUtils.getUserFromSecurityContext();
         return bookRepository.searchByTitleUsingFullText(title, pageable)
-                .map(BookResponse::new);
+                .map(myBook -> new BookResponse(myBook,existsByUserAndBook(user,myBook)));
     }
 
     public BookResponse findBookByBookId(Long bookId) {
         Book book = queryBook(bookId);
-        return new BookResponse(book);
+        User user = userUtils.getUserFromSecurityContext();
+        boolean isBookMarked = existsByUserAndBook(user, book);
+        return new BookResponse(book, isBookMarked);
     }
 
     @Override
@@ -61,8 +67,9 @@ public class BookService implements BookServiceUtils {
     @Override
     public Page<BookResponse> findPopularBooksByAgeAndGender(String gender, int ageGroup, Pageable pageable){
         ageGroup = ageGroup/10;
+        User user = userUtils.getUserFromSecurityContext();
         return myBookRepository.findAllByAgeAndGenderOrderByMyBookCountDesc(ageGroup, Gender.valueOf(gender), pageable)
-                .map(myBook -> new BookResponse(myBook.getBook()));
+                .map(myBook -> new BookResponse(myBook.getBook(),existsByUserAndBook(user,myBook.getBook())));
     }
 
     public List<BookResponse> findRecommendBooksByUserInterest() {
@@ -92,7 +99,8 @@ public class BookService implements BookServiceUtils {
                 for (String book : recommendedBooks) {
                     Optional<Book> bookOptional = bookRepository.findById(Long.parseLong(book));
                     if(bookOptional.isPresent()){
-                        books.add(new BookResponse(bookOptional.get()));
+                        boolean isBookMarked = existsByUserAndBook(user, bookOptional.get());
+                        books.add(new BookResponse(bookOptional.get(), isBookMarked));
                     }
                 }
             }
@@ -130,7 +138,8 @@ public class BookService implements BookServiceUtils {
                 for (String title : recommendedTitles) {
                     Optional<Book> bookOptional = bookRepository.findFirstByTitle(title);
                     if(bookOptional.isPresent()){
-                        books.add(new BookResponse(bookOptional.get()));
+                        boolean isBookMarked = existsByUserAndBook(user, bookOptional.get());
+                        books.add(new BookResponse(bookOptional.get(), isBookMarked));
                     }
                 }
             }
@@ -172,11 +181,16 @@ public class BookService implements BookServiceUtils {
                 for (String title : recommendedBookTitles) {
                     Optional<Book> bookOptional = bookRepository.findFirstByTitle(title);
                     if(bookOptional.isPresent()){
-                        books.add(new BookResponse(bookOptional.get()));
+                        boolean isBookMarked = existsByUserAndBook(user, bookOptional.get());
+                        books.add(new BookResponse(bookOptional.get(), isBookMarked));
                     }
                 }
             }
         }
         return books;
+    }
+
+    public boolean existsByUserAndBook(User user, Book book) {
+        return bookmarkRepository.existsByUserAndBook(user, book);
     }
 }

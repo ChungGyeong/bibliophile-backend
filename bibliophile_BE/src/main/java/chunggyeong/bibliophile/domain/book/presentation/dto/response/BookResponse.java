@@ -11,11 +11,12 @@ public record BookResponse(
         String authors,
         int pageNumber,
         String thumbnail,
-        String publisher
+        String publisher,
+        boolean isBookMarked
 ) {
-    public BookResponse(Book book){
+    public BookResponse(Book book, boolean isBookMarked){
         this(book.getId(), book.getContents(), book.getIsbn(), book.getKdc(),
                 book.getTitle(), book.getAuthors(), book.getPage(),
-                book.getThumbnail(), book.getPublisher());
+                book.getThumbnail(), book.getPublisher(), isBookMarked);
     }
 }
