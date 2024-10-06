@@ -163,7 +163,7 @@ public class MyBookService implements MyBookServiceUtils{
     public List<MyBookResponse> findMyBooksByStatus(ReadingStatus readingStatus) {
         User user = userUtils.getUserFromSecurityContext();
 
-        List<MyBook> myBookList = myBookRepository.findAllByUserAndReadingStatus(user, readingStatus);
+        List<MyBook> myBookList = myBookRepository.findAllByUserAndReadingStatusOrderByCreatedDateDesc(user, readingStatus);
 
         return myBookList.stream()
                 .map(myBook -> {

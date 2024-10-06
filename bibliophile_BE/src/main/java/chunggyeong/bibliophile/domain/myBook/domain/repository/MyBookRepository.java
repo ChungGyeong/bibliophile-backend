@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface MyBookRepository extends JpaRepository<MyBook, Long> {
 
-    List<MyBook> findAllByUserAndReadingStatus(User user, ReadingStatus readingStatus);
+    List<MyBook> findAllByUserAndReadingStatusOrderByCreatedDateDesc(User user, ReadingStatus readingStatus);
 
     boolean existsByUserAndBook(User user, Book book);
 
