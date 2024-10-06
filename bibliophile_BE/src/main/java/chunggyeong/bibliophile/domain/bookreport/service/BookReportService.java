@@ -68,8 +68,10 @@ public class BookReportService implements BookReportServiceUtils {
 
         myBookServiceUtils.validUserIsHost(myBook, user);
 
-        BookReport bookReport = bookReportRepository.findByMyBook(myBook).orElseThrow(()->BookReportNotFoundException.EXCEPTION);
+        BookReport bookReport = bookReportRepository.findByMyBook(myBook)
+                .orElse(null);
 
+        if(bookReport == null){ return null; }
         if(!bookReportImgRepository.existsByBookReport(bookReport)){
             return new BookReportResponse(bookReport, null);
         }
