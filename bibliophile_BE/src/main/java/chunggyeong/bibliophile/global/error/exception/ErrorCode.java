@@ -16,6 +16,7 @@ public enum ErrorCode {
     BAD_REQUEST(400,"잘못된 입력입니다."),
     NO_FEED_AVAILABLE(400,"여우에게 줄 수 있는 먹이가 없습니다."),
     BAD_PAGE(400,"이전에 입력한 페이지 보다 적은 페이지를 입력할 수 없습니다."),
+    NO_TAG_PROVIDED(400,"입력된 태그가 없습니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     EXPIRED_TOKEN(401, "토큰이 만료되었습니다."),
