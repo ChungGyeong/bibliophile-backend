@@ -3,7 +3,6 @@ package chunggyeong.bibliophile.domain.book.service;
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.domain.repository.BookRepository;
 import chunggyeong.bibliophile.domain.book.exception.BookNotFoundException;
-import chunggyeong.bibliophile.domain.book.exception.TagNotProvidedException;
 import chunggyeong.bibliophile.domain.book.presentation.dto.request.ContentRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.request.TagRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.BookResponse;
@@ -142,7 +141,7 @@ public class BookService implements BookServiceUtils {
     public List<BookResponse> findRecommendBooksRelatedTag(TagRecommendationRequest tagRecommendationRequest) {
 
         if(tagRecommendationRequest.tags()==null || tagRecommendationRequest.tags().isEmpty()){
-            throw TagNotProvidedException.EXCEPTION;
+            return findRecommendBooksByUserInterest();
         }
 
         User user = userUtils.getUserFromSecurityContext();
