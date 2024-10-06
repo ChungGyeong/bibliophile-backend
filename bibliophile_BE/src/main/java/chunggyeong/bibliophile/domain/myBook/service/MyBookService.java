@@ -153,6 +153,7 @@ public class MyBookService implements MyBookServiceUtils{
         if(updateMyBookStatusRequest.status().equals(ReadingStatus.READ)){
             Fox fox = foxServiceUtils.queryFoxByUser(user);
             fox.updateAddFoxFeedCount();
+            myBook.updateCompletionReadingTime();
         }
 
         return new MyBookResponse(myBook, book, totalReadingTime, readingTime, isBookmarked);

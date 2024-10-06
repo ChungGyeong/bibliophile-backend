@@ -87,4 +87,8 @@ public class MyBook extends BaseEntity {
     public void updateReadingStatus(ReadingStatus readingStatus) {
         this.readingStatus = readingStatus;
     }
+
+    public void updateCompletionReadingTime() {
+        this.completionReadingTime = LocalDateTime.now();
+    }
 }
