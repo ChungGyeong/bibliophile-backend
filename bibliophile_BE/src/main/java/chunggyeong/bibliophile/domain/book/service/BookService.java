@@ -148,7 +148,7 @@ public class BookService implements BookServiceUtils {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id",tagRecommendationRequest.id());
+        requestBody.put("id",user.getId());
         requestBody.put("tags",tagRecommendationRequest.tags());
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
