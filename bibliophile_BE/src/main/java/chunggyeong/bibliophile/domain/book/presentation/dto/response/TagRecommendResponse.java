@@ -4,6 +4,6 @@ import java.util.List;
 
 public record TagRecommendResponse(
         Long user_name,
-        List<String> recommendations
+        List<Long> recommendations
 ) {
 }

@@ -176,10 +176,10 @@ public class BookService implements BookServiceUtils {
             TagRecommendResponse recommendResponse = response.getBody();
 
             log.debug("[Spring] user : {}",user);
-            List<String> recommendedBookTitles = recommendResponse.recommendations();
+            List<Long> recommendedBookTitles = recommendResponse.recommendations();
             if (recommendedBookTitles != null && !recommendedBookTitles.isEmpty()) {
-                for (String title : recommendedBookTitles) {
-                    Optional<Book> bookOptional = bookRepository.findFirstByTitle(title);
+                for (Long bookId : recommendedBookTitles) {
+                    Optional<Book> bookOptional = bookRepository.findById(bookId);
                     if(bookOptional.isPresent()){
                         boolean isBookMarked = existsByUserAndBook(user, bookOptional.get());
                         books.add(new BookResponse(bookOptional.get(), isBookMarked));
