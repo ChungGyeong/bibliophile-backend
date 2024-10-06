@@ -26,9 +26,9 @@ public class BookmarkController {
     }
 
     @Operation(summary = "즐겨찾기 삭제")
-    @DeleteMapping("/{bookmarkId}")
-    public void deleteBookmark(@PathVariable Long bookmarkId) {
-        bookmarkService.deleteBookmark(bookmarkId);
+    @DeleteMapping("/{bookId}")
+    public void deleteBookmark(@PathVariable Long bookId) {
+        bookmarkService.deleteBookmark(bookId);
     }
 
     @Operation(summary = "나의 즐겨찾기 목록 조회")

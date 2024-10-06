@@ -6,7 +6,7 @@ import chunggyeong.bibliophile.domain.bookmark.domain.Bookmark;
 import java.time.LocalDateTime;
 
 public record BookmarkResponse(
-    Long bookmarkId,
+    Long bookId,
     String title,
     String thumbnail,
     String authors,
@@ -15,7 +15,7 @@ public record BookmarkResponse(
     LocalDateTime lastModifyDate
 ) {
     public BookmarkResponse(Bookmark bookmark, Book book) {
-        this(bookmark.getId(), book.getTitle(), book.getThumbnail(), book.getAuthors(), book.getPublisher(),
+        this(book.getId(), book.getTitle(), book.getThumbnail(), book.getAuthors(), book.getPublisher(),
                 bookmark.getCreatedDate(), bookmark.getLastModifyDate());
     }
 }

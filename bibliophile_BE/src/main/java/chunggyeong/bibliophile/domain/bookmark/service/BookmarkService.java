@@ -46,9 +46,10 @@ public class BookmarkService implements BookmarkServiceUtils{
     }
 
     @Transactional
-    public void deleteBookmark(Long bookmarkId) {
-        Bookmark bookmark = queryBookmark(bookmarkId);
+    public void deleteBookmark(Long bookId) {
+        Book book = bookServiceUtils.queryBook(bookId);
         User user = userUtils.getUserFromSecurityContext();
+        Bookmark bookmark = bookmarkRepository.findByUserAndBook(user, book).orElseThrow(() -> BookmarkNotFoundException.EXCEPTION);
 
         bookmark.validUserIsHost(user);
 
