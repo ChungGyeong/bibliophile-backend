@@ -65,7 +65,8 @@ public class ReviewService implements ReviewServiceUtils{
         User user = userUtils.getUserFromSecurityContext();
         MyBook myBook = myBookServiceUtils.queryMyBook(myBookId);
         Book book = bookServiceUtils.queryBook(myBook.getBook().getId());
-        Review review = reviewRepository.findByUserAndBook(user, book).orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+        Review review = reviewRepository.findByUserAndBook(user, book).orElse(null);
+        if(review == null) { return null; }
 
         return new ReviewResponse(review, user.getNickname(), true);
     }
