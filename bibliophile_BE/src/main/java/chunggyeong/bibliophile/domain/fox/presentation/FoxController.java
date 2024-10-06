@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class FoxController {
     }
 
     @Operation(summary = "내 여우 먹이주기")
-    @GetMapping("/feed")
+    @PatchMapping("/feed")
     public FoxResponse updateFox() {
         return foxService.updateMyFoxFeedCount();
     }
