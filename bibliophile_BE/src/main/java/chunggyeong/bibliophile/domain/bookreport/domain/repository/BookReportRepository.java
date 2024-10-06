@@ -7,9 +7,11 @@ import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface BookReportRepository extends JpaRepository<BookReport, Long> {
 
-    BookReport findByMyBook(MyBook myBook);
+    Optional<BookReport> findByMyBook(MyBook myBook);
 
     // 특정 유저가 소유한 MyBook에 관련된 BookReport가 있는지 확인
     @Query("SELECT CASE WHEN COUNT(br) > 0 THEN TRUE ELSE FALSE END " +

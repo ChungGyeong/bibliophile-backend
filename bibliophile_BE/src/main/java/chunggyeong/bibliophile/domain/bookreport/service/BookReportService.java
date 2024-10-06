@@ -8,6 +8,7 @@ import chunggyeong.bibliophile.domain.bookreport.presentation.dto.request.AddBoo
 import chunggyeong.bibliophile.domain.bookreport.presentation.dto.request.UpdateBookReportRequest;
 import chunggyeong.bibliophile.domain.bookreport.presentation.dto.response.BookReportResponse;
 import chunggyeong.bibliophile.domain.bookreportimg.domain.BookReportImg;
+import chunggyeong.bibliophile.domain.bookreportimg.domain.repository.BookReportImgRepository;
 import chunggyeong.bibliophile.domain.bookreportimg.service.BookReportImgServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookServiceUtils;
@@ -30,6 +31,7 @@ public class BookReportService implements BookReportServiceUtils {
     private final MyBookServiceUtils myBookServiceUtils;
     private final UserUtils userUtils;
     private final BookReportImgServiceUtils bookReportImgServiceUtils;
+    private final BookReportImgRepository bookReportImgRepository;
 
     // 독후감 작성
     @Transactional
@@ -66,7 +68,11 @@ public class BookReportService implements BookReportServiceUtils {
 
         myBookServiceUtils.validUserIsHost(myBook, user);
 
-        BookReport bookReport = bookReportRepository.findByMyBook(myBook);
+        BookReport bookReport = bookReportRepository.findByMyBook(myBook).orElseThrow(()->BookReportNotFoundException.EXCEPTION);
+
+        if(!bookReportImgRepository.existsByBookReport(bookReport)){
+            return new BookReportResponse(bookReport, null);
+        }
         List<String> bookReportImgUrlList = bookReport.getBookReportImgList().stream()
                 .map(BookReportImg::getImgUrl)
                 .toList();

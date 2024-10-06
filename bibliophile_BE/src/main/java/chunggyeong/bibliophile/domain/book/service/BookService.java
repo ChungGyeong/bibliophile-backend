@@ -41,8 +41,8 @@ public class BookService implements BookServiceUtils {
     public BookResponse findBookByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(isbn).orElseThrow(() -> BookNotFoundException.EXCEPTION);
         User user = userUtils.getUserFromSecurityContext();
-        boolean isBookMarked = existsByUserAndBook(user, book);
-        return new BookResponse(book, isBookMarked);
+        boolean isBookmarked = existsByUserAndBook(user, book);
+        return new BookResponse(book, isBookmarked);
     }
 
     @Override
@@ -55,8 +55,8 @@ public class BookService implements BookServiceUtils {
     public BookResponse findBookByBookId(Long bookId) {
         Book book = queryBook(bookId);
         User user = userUtils.getUserFromSecurityContext();
-        boolean isBookMarked = existsByUserAndBook(user, book);
-        return new BookResponse(book, isBookMarked);
+        boolean isBookmarked = existsByUserAndBook(user, book);
+        return new BookResponse(book, isBookmarked);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class BookService implements BookServiceUtils {
                 for (String book : recommendedBooks) {
                     Optional<Book> bookOptional = bookRepository.findById(Long.parseLong(book));
                     if(bookOptional.isPresent()){
-                        boolean isBookMarked = existsByUserAndBook(user, bookOptional.get());
-                        books.add(new BookResponse(bookOptional.get(), isBookMarked));
+                        boolean isBookmarked = existsByUserAndBook(user, bookOptional.get());
+                        books.add(new BookResponse(bookOptional.get(), isBookmarked));
                     }
                 }
             }

@@ -7,5 +7,5 @@ public class BookReportNotFoundException extends MainException {
 
     public static final MainException EXCEPTION = new BookReportNotFoundException();
 
-    private BookReportNotFoundException() { super(ErrorCode.BOOK_NOT_FOUND); }
+    private BookReportNotFoundException() { super(ErrorCode.BOOK_REPORT_NOT_FOUND); }
 }
