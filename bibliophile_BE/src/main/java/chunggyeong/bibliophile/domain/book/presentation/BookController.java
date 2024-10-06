@@ -31,7 +31,7 @@ public class BookController {
     @Operation(summary = "제목 기반 책 검색")
     @GetMapping("/search")
     public List<BookResponse> searchBookListByTitle(@RequestParam String title,
-                                                    @PageableDefault(size = 6, sort = "id") Pageable pageable) {
+                                                    @PageableDefault(size = 6, sort = "book_id") Pageable pageable) {
         return bookService.findBooksByTitle(title, pageable).stream().toList();
     }
 
