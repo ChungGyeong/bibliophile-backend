@@ -13,5 +13,5 @@ public interface BookServiceUtils {
 
     Book queryBook(Long id);
 
-    Page<BookResponse> findPopularBooksByAgeAndGender(Pageable pageable);
+    Page<BookResponse> findPopularBooksByAgeAndGender(String gender, int ageGroup, Pageable pageable);
 }

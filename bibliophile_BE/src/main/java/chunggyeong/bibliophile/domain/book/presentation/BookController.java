@@ -22,8 +22,10 @@ public class BookController {
 
     @Operation(summary= "연령 및 성별에 따른 인기 도서 추천")
     @GetMapping("/popular")
-    public List<BookResponse> recommandBookListByAgeAndGender(@PageableDefault(size = 6, sort = "id") Pageable pageable) {
-        return bookService.findPopularBooksByAgeAndGender(pageable).stream().toList();
+    public List<BookResponse> recommandBookListByAgeAndGender(@RequestParam("gender") String gender,
+                                                              @RequestParam("ageGroup") int ageGroup,
+                                                              @PageableDefault(size = 6) Pageable pageable) {
+        return bookService.findPopularBooksByAgeAndGender(gender, ageGroup, pageable).stream().toList();
     }
 
     @Operation(summary = "제목 기반 책 검색")

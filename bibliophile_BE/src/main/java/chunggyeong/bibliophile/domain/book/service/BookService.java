@@ -10,6 +10,7 @@ import chunggyeong.bibliophile.domain.book.presentation.dto.response.ContentReco
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.RecommendResponse;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.TagRecommendResponse;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
+import chunggyeong.bibliophile.domain.user.domain.Gender;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.*;
 
 @Slf4j
@@ -60,10 +59,9 @@ public class BookService implements BookServiceUtils {
     }
 
     @Override
-    public Page<BookResponse> findPopularBooksByAgeAndGender(Pageable pageable){
-        User user=userUtils.getUserFromSecurityContext();
-        int ageGroup = Period.between(user.getBirthday(), LocalDate.now()).getYears()/10;
-        return myBookRepository.findAllByAgeAndGenderOrderByMyBookCountDesc(ageGroup, user.getGender(), pageable)
+    public Page<BookResponse> findPopularBooksByAgeAndGender(String gender, int ageGroup, Pageable pageable){
+        ageGroup = ageGroup/10;
+        return myBookRepository.findAllByAgeAndGenderOrderByMyBookCountDesc(ageGroup, Gender.valueOf(gender), pageable)
                 .map(myBook -> new BookResponse(myBook.getBook()));
     }
 
