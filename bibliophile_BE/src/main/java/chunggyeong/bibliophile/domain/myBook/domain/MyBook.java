@@ -91,4 +91,8 @@ public class MyBook extends BaseEntity {
     public void updateCompletionReadingTime() {
         this.completionReadingTime = LocalDateTime.now();
     }
+
+    public void updateTotalReadingTime(Duration totalReadingTime) {
+        this.totalReadingTime = totalReadingTime;
+    }
 }

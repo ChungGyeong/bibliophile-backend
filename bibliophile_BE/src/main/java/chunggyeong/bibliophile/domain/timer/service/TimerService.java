@@ -45,6 +45,10 @@ public class TimerService {
 
         String readingTime = formatDuration(Duration.between(timer.getStartTime(), timer.getEndTime()));
 
+        Duration totalReadingTime = myBook.getTotalReadingTime().plus(Duration.between(timer.getStartTime(), timer.getEndTime()));
+
+        myBook.updateTotalReadingTime(totalReadingTime);
+
         return new TimerResponse(timer, readingTime);
     }
 
@@ -75,6 +79,7 @@ public class TimerService {
     private String formatDuration(Duration duration) {
         long hours = duration.toHours();
         long minutes = duration.toMinutesPart();
-        return String.format("%d:%d", hours, minutes);
+        long seconds = duration.toSecondsPart();
+        return String.format("%d:%d:%d", hours, minutes, seconds);
     }
 }

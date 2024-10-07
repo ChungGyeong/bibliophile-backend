@@ -236,7 +236,7 @@ public class MyBookService implements MyBookServiceUtils{
         long hours = totalReadingTime.toHours();
         long minutes = totalReadingTime.toMinutesPart();
         long seconds = totalReadingTime.toSecondsPart();
-        return String.format("%d:%d:%d초", hours, minutes, seconds);
+        return String.format("%d:%d:%d", hours, minutes, seconds);
     }
 
     @Override
