@@ -61,7 +61,7 @@ public class Fox extends BaseEntity {
         this.feedCount--;
         this.exp++;
 
-        if(this.level<3){
+        if(this.level<5){
             this.percent = exp/3.0*100;
             if(this.exp==3){
                 levelUp();
@@ -86,7 +86,7 @@ public class Fox extends BaseEntity {
         this.exp=0;
         this.status = FoxStatus.GOOD;
         this.percent = 0.0;
-        if(this.level==3){
+        if(this.level==5){
             this.type = FoxType.YOUTH;
         }
         else if(this.level==10){
