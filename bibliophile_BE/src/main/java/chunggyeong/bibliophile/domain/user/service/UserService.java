@@ -114,7 +114,7 @@ public class UserService {
         User user = userUtils.getUserFromSecurityContext();
         List<Classification> classificationList = interestServiceUtils.findInterestsByUser(user);
 
-        if (userRepository.existsByNickname(updateUserRequest.nickname())) {
+        if (!updateUserRequest.nickname().equals(user.getNickname()) && userRepository.existsByNickname(updateUserRequest.nickname())) {
             throw NicknameDuplicationException.EXCEPTION;
         }
 
