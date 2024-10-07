@@ -1,9 +1,9 @@
 package chunggyeong.bibliophile.domain.bookmark.presentation.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record AddBookmarkRequest(
-    @NotBlank
+    @NotNull
     Long bookId
 ) {
 }

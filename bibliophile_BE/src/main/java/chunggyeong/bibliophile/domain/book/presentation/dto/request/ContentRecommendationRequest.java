@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 public record ContentRecommendationRequest(
         @NotBlank
         String title,
-        @NotBlank
         int requestNumber
 ) {
 }

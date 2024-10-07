@@ -4,6 +4,7 @@ import chunggyeong.bibliophile.domain.interest.domain.Classification;
 import chunggyeong.bibliophile.domain.oauth.domain.OauthServerType;
 import chunggyeong.bibliophile.domain.user.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
@@ -21,17 +22,17 @@ public record SignUpUserRequest(
         @NotBlank
         Gender gender,
 
-        @NotBlank
+        @NotNull
         @PastOrPresent(message = "미래의 날짜는 선택하지 못합니다.")
         LocalDate birthday,
 
-        @NotBlank
+        @NotNull
         List<Classification> classification,
 
         @NotBlank
         String profileImage,
 
-        @NotBlank
+        @NotNull
         OauthServerType oauthServerType
 ) {
 }

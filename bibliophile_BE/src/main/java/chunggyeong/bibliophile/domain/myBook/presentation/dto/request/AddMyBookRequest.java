@@ -1,9 +1,9 @@
 package chunggyeong.bibliophile.domain.myBook.presentation.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record AddMyBookRequest(
-        @NotBlank
+        @NotNull
         Long bookId
 ) {
 }
