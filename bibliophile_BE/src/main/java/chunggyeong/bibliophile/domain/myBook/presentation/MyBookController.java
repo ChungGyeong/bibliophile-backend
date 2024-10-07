@@ -8,6 +8,8 @@ import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBo
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookService;
+import chunggyeong.bibliophile.domain.user.domain.User;
+import chunggyeong.bibliophile.global.utils.user.UserUtilsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -23,6 +25,7 @@ import java.util.List;
 public class MyBookController {
 
     private final MyBookService myBookService;
+    private final UserUtilsImpl userUtilsImpl;
 
     @Operation(summary = "나의 책 추가")
     @PostMapping()
@@ -70,5 +73,11 @@ public class MyBookController {
     @GetMapping("/statistics")
     public List<MyBookCountByKDC> findMyBooksStatistics() {
         return myBookService.findMyBooksStatistics();
+    }
+
+    @PostMapping("/test")
+    public void sendBookSummaries() {
+        User user = userUtilsImpl.getUserFromSecurityContext();
+        myBookService.sendBookSummaries(user);
     }
 }

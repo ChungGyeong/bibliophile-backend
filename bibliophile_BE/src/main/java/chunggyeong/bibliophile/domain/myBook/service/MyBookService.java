@@ -19,6 +19,7 @@ import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCou
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.streak.service.StreakService;
 import chunggyeong.bibliophile.domain.user.domain.User;
+import chunggyeong.bibliophile.domain.user.domain.repository.UserRepository;
 import chunggyeong.bibliophile.global.utils.user.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -53,6 +56,7 @@ public class MyBookService implements MyBookServiceUtils{
     private final FileServiceUtils fileServiceUtils;
     private final FoxServiceUtils foxServiceUtils;
     private final StreakService streakService;
+    private final UserRepository userRepository;
 
     // 나의 책 등록
     @Transactional
@@ -195,21 +199,32 @@ public class MyBookService implements MyBookServiceUtils{
                 .collect(Collectors.toList());
     }
 
-    // 빅데이터 서버로 내가 읽은 책 줄거리 리스트 전송
+//    모든 유저의 워드클라우드 초기화
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     @Transactional
-    public UploadFileResponse sendBookSummaries() {
-        User user = userUtils.getUserFromSecurityContext();
+    public void updateWordCloud() {
+        List<User> userList = userRepository.findAll();
+
+        for (User user : userList) {
+            sendBookSummaries(user);
+        }
+    }
+
+    // 빅데이터 서버로 내가 읽은 책 줄거리 리스트 전송
+    @Async
+    @Transactional
+    public void sendBookSummaries(User user) {
         List<String> contentList = myBookRepository.findAllByUser(user).stream()
                 .map(myBook -> myBook.getBook().getContents())
                 .collect(Collectors.toList());
 
-        log.info(String.valueOf(contentList.size()));
+        if (contentList.isEmpty()) return;
 
         UploadFileResponse uploadFileResponse = sendWordCloudData(contentList);
 
         user.updateWordCloudImgUrl(uploadFileResponse.url());
 
-        return uploadFileResponse;
+        userRepository.save(user);
     }
 
     public UploadFileResponse sendWordCloudData(List<String> content) {
