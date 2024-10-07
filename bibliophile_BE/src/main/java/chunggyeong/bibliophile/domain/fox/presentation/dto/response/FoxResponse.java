@@ -11,13 +11,14 @@ public record FoxResponse (
         int level,
         int exp,
         int feedCount,
+        double percent,
         FoxType foxType,
         FoxStatus foxStatus,
         LocalDateTime createdDate,
         LocalDateTime lastModifyDate
 ){
     public FoxResponse(Fox fox){
-        this(fox.getId(),fox.getLevel(),fox.getExp(),fox.getFeedCount(),
+        this(fox.getId(),fox.getLevel(),fox.getExp(),fox.getFeedCount(),fox.getPercent(),
                 fox.getType(),fox.getStatus(),fox.getCreatedDate(), fox.getLastModifyDate());
     }
 }

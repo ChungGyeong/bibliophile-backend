@@ -2,6 +2,8 @@ package chunggyeong.bibliophile.domain.review.service;
 
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.service.BookServiceUtils;
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.service.FoxServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookServiceUtils;
 import chunggyeong.bibliophile.domain.review.domain.Review;
@@ -32,6 +34,7 @@ public class ReviewService implements ReviewServiceUtils{
     private final BookServiceUtils bookServiceUtils;
     private final MyBookServiceUtils myBookServiceUtils;
     private final UserUtils userUtils;
+    private final FoxServiceUtils foxServiceUtils;
 
     // 리뷰 작성
     @Transactional
@@ -44,6 +47,9 @@ public class ReviewService implements ReviewServiceUtils{
         }
 
         Review review = Review.createReview(user, book, addReviewRequest.content(), addReviewRequest.star());
+
+        Fox fox = foxServiceUtils.queryFoxByUser(user);
+        fox.updateAddFoxFeedCount();
 
         reviewRepository.save(review);
 

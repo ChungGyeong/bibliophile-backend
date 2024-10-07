@@ -10,6 +10,8 @@ import chunggyeong.bibliophile.domain.bookreport.presentation.dto.response.BookR
 import chunggyeong.bibliophile.domain.bookreportimg.domain.BookReportImg;
 import chunggyeong.bibliophile.domain.bookreportimg.domain.repository.BookReportImgRepository;
 import chunggyeong.bibliophile.domain.bookreportimg.service.BookReportImgServiceUtils;
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.service.FoxServiceUtils;
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookServiceUtils;
 import chunggyeong.bibliophile.domain.user.domain.User;
@@ -32,6 +34,7 @@ public class BookReportService implements BookReportServiceUtils {
     private final UserUtils userUtils;
     private final BookReportImgServiceUtils bookReportImgServiceUtils;
     private final BookReportImgRepository bookReportImgRepository;
+    private final FoxServiceUtils foxServiceUtils;
 
     // 독후감 작성
     @Transactional
@@ -48,6 +51,9 @@ public class BookReportService implements BookReportServiceUtils {
         List<String> bookReportImgUrlList = bookReportImgServiceUtils.addBookReportImg(bookReport, addBookReportRequest.ImgUrl()).stream()
                 .map(BookReportImg::getImgUrl)
                 .toList();
+
+        Fox fox = foxServiceUtils.queryFoxByUser(user);
+        fox.updateAddFoxFeedCount();
 
         return new BookReportResponse(bookReport, bookReportImgUrlList);
     }

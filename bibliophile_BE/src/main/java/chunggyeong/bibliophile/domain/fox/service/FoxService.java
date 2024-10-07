@@ -56,7 +56,7 @@ public class FoxService implements FoxServiceUtils{
         User user = userUtils.getUserFromSecurityContext();
         log.info("User {} update a fox", user);
         Fox fox = queryFoxByUser(user);
-        fox.updateFeedCount();
+        fox.updateExpCount();
         return new FoxResponse(fox);
     }
 

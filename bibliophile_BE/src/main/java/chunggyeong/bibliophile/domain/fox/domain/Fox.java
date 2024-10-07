@@ -25,6 +25,7 @@ public class Fox extends BaseEntity {
     private int level;
     private int exp;
     private int feedCount;
+    private double percent;
 
     @Enumerated(STRING)
     private FoxType type;
@@ -44,6 +45,7 @@ public class Fox extends BaseEntity {
         this.type = FoxType.BABY;
         this.status = FoxStatus.GOOD;
         this.user = user;
+        this.percent = 0.0;
     }
 
     public static Fox createFox(User user) {
@@ -52,21 +54,30 @@ public class Fox extends BaseEntity {
                 .build();
     }
 
-    public void updateFeedCount() {
+    public void updateExpCount() {
         if(this.feedCount<=0){
             throw NoFeedAvailableException.EXCEPTION;
         }
         this.feedCount--;
         this.exp++;
 
-        if(this.level<3 && this.exp==1){
-            levelUp();
+        if(this.level<3){
+            this.percent = exp/3.0*100;
+            if(this.exp==3){
+                levelUp();
+            }
         }
-        else if(this.level>=3 && this.level<=9 && this.exp==3){
-            levelUp();
+        else if(this.level<=9){
+            this.percent = exp/5.0*100;
+            if(this.exp==5){
+                levelUp();
+            }
         }
-        else if(this.level>=10 && this.exp==5){
-            levelUp();
+        else if(this.level>=10) {
+            this.percent = exp/10.0*100;
+            if(this.exp==10){
+                levelUp();
+            }
         }
     }
 
@@ -74,8 +85,9 @@ public class Fox extends BaseEntity {
         this.level++;
         this.exp=0;
         this.status = FoxStatus.GOOD;
+        this.percent = 0.0;
         if(this.level==3){
-            this.type = FoxType.ADULT;
+            this.type = FoxType.YOUTH;
         }
         else if(this.level==10){
             this.type = FoxType.ADULT;

@@ -1,5 +1,7 @@
 package chunggyeong.bibliophile.domain.memo.service;
 
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.service.FoxServiceUtils;
 import chunggyeong.bibliophile.domain.memo.domain.Memo;
 import chunggyeong.bibliophile.domain.memo.domain.repository.MemoRepository;
 import chunggyeong.bibliophile.domain.memo.exception.MemoNotFoundException;
@@ -31,6 +33,7 @@ public class MemoService implements MemoServiceUtils {
     private final MyBookServiceUtils myBookServiceUtils;
     private final UserUtils userUtils;
     private final MemoImgServiceUtils memoImgServiceUtils;
+    private final FoxServiceUtils foxServiceUtils;
 
     // 메모 작성
     @Transactional
@@ -48,6 +51,9 @@ public class MemoService implements MemoServiceUtils {
         List<String> memoImgList = memoImgServiceUtils.addMemoImg(memo, addMemoRequest.memoImgUrl()).stream()
                 .map(MemoImg::getImgUrl)
                 .toList();
+
+        Fox fox = foxServiceUtils.queryFoxByUser(user);
+        fox.updateAddFoxFeedCount();
 
         return new MemoResponse(memo, memoImgList);
     }

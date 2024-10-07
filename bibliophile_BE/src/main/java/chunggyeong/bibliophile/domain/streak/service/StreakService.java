@@ -1,5 +1,7 @@
 package chunggyeong.bibliophile.domain.streak.service;
 
+import chunggyeong.bibliophile.domain.fox.domain.Fox;
+import chunggyeong.bibliophile.domain.fox.service.FoxServiceUtils;
 import chunggyeong.bibliophile.domain.streak.domain.Streak;
 import chunggyeong.bibliophile.domain.streak.domain.repository.StreakRepository;
 import chunggyeong.bibliophile.domain.streak.exception.BadPageException;
@@ -23,6 +25,7 @@ public class StreakService implements StreakServiceUtils {
 
     private final StreakRepository streakRepository;
     private final UserUtils userUtils;
+    private final FoxServiceUtils foxServiceUtils;
 
     @Transactional
     public StreakResponse addStreak(int page){
@@ -31,13 +34,26 @@ public class StreakService implements StreakServiceUtils {
         if(page<0) {
             throw BadPageException.EXCEPTION;
         }
+
         if(optionalStreak.isPresent()){
             Streak existStreak = optionalStreak.get();
+            int originTotal = existStreak.getTotal();
             existStreak.updateIncreaseStreakTotal(page);
+            if(originTotal<30 && existStreak.getTotal()>=30){
+                Fox fox = foxServiceUtils.queryFoxByUser(user);
+                fox.updateAddFoxFeedCount();
+            }
             return new StreakResponse(existStreak);
         };
+
         Streak streak = Streak.createStreak(user);
+        streak.updateIncreaseStreakTotal(page);
         streakRepository.save(streak);
+        if(page>=30){
+            Fox fox = foxServiceUtils.queryFoxByUser(user);
+            fox.updateAddFoxFeedCount();
+        }
+
         return new StreakResponse(streak);
     }
 
