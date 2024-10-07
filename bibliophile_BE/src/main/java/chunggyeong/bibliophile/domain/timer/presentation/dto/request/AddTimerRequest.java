@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 public record AddTimerRequest(
         @NotNull
         Long myBookId,
-        @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
         LocalDateTime startTime,
-        @NotNull @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
         LocalDateTime endTime
 ) {
 }

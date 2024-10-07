@@ -14,7 +14,6 @@ public record AddMemoRequest(
         String content,
         @Min(0)
         int memoPage,
-        @NotBlank
         List<String> memoImgUrl
 ) {
 }

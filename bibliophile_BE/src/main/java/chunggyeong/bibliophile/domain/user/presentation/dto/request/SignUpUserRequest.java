@@ -19,20 +19,16 @@ public record SignUpUserRequest(
         @NotBlank
         String email,
 
-        @NotBlank
         Gender gender,
 
-        @NotNull
         @PastOrPresent(message = "미래의 날짜는 선택하지 못합니다.")
         LocalDate birthday,
 
-        @NotNull
         List<Classification> classification,
 
         @NotBlank
         String profileImage,
 
-        @NotNull
         OauthServerType oauthServerType
 ) {
 }
