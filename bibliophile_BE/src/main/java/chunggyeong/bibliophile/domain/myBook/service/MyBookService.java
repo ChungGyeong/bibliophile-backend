@@ -75,7 +75,7 @@ public class MyBookService implements MyBookServiceUtils{
 
         bookmarkServiceUtils.deleteBookmarkByExist(isBookmarked, user, book);
 
-        return new MyBookResponse(myBook, book, "0:0:0", 0, isBookmarked);
+        return new MyBookResponse(myBook, book, "00:00:00", 0, isBookmarked);
     }
 
     // 나의 책 단건 조회
@@ -211,7 +211,7 @@ public class MyBookService implements MyBookServiceUtils{
 
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, myBook.getBook());
 
-        return new MyBookResponse(myBook, myBook.getBook(), "0:0:0", 0, isBookmarked);
+        return new MyBookResponse(myBook, myBook.getBook(), "00:00:00", 0, isBookmarked);
     }
 
 //    모든 유저의 워드클라우드 초기화
@@ -266,7 +266,7 @@ public class MyBookService implements MyBookServiceUtils{
         long hours = totalReadingTime.toHours();
         long minutes = totalReadingTime.toMinutesPart();
         long seconds = totalReadingTime.toSecondsPart();
-        return String.format("%d:%d:%d", hours, minutes, seconds);
+        return String.format("%d:%02d:%02d", hours, minutes, seconds);
     }
 
     @Override
