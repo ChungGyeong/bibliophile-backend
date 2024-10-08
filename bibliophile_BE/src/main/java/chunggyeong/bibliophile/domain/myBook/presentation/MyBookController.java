@@ -76,7 +76,7 @@ public class MyBookController {
     }
 
     @Operation(summary = "책 다시 읽기")
-    @PatchMapping("/reReadBook/{myBookId}")
+    @PatchMapping("/re-read/{myBookId}")
     public MyBookResponse reReadBook(@PathVariable Long myBookId) {
         return myBookService.reReadBook(myBookId);
     }
