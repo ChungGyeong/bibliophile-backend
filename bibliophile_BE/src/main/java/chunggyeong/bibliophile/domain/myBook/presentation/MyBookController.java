@@ -75,9 +75,9 @@ public class MyBookController {
         return myBookService.findMyBooksStatistics();
     }
 
-    @PostMapping("/test")
-    public void sendBookSummaries() {
-        User user = userUtilsImpl.getUserFromSecurityContext();
-        myBookService.sendBookSummaries(user);
+    @Operation(summary = "책 다시 읽기")
+    @PatchMapping("/reReadBook/{myBookId}")
+    public MyBookResponse reReadBook(@PathVariable Long myBookId) {
+        return myBookService.reReadBook(myBookId);
     }
 }

@@ -199,6 +199,21 @@ public class MyBookService implements MyBookServiceUtils{
                 .collect(Collectors.toList());
     }
 
+    // 다시 읽기
+    @Transactional
+    public MyBookResponse reReadBook(Long myBookId) {
+        MyBook myBook = queryMyBook(myBookId);
+        User user = userUtils.getUserFromSecurityContext();
+
+        myBook.validUserIsHost(user);
+
+        myBook.reReadBook();
+
+        boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, myBook.getBook());
+
+        return new MyBookResponse(myBook, myBook.getBook(), "0:0:0", 0, isBookmarked);
+    }
+
 //    모든 유저의 워드클라우드 초기화
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     @Transactional
