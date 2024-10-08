@@ -1,6 +1,8 @@
 package chunggyeong.bibliophile.domain.myBook.domain;
 
 import chunggyeong.bibliophile.domain.book.domain.Book;
+import chunggyeong.bibliophile.domain.bookreport.domain.BookReport;
+import chunggyeong.bibliophile.domain.memo.domain.Memo;
 import chunggyeong.bibliophile.domain.myBook.exception.PageLimitExceededException;
 import chunggyeong.bibliophile.domain.myBook.exception.UserNotMyBookHostException;
 import chunggyeong.bibliophile.domain.timer.domain.Timer;
@@ -18,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus.READING;
-import static chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus.UNREAD;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -53,6 +54,12 @@ public class MyBook extends BaseEntity {
 
     @OneToMany(mappedBy = "myBook", cascade = CascadeType.ALL)
     private List<Timer> timerList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "myBook", cascade = CascadeType.ALL)
+    private List<BookReport> bookReportList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "myBook", cascade = CascadeType.ALL)
+    private List<Memo> memoList = new ArrayList<>();
 
     @Builder
     public MyBook(User user, Book book, int readingPage, Duration totalReadingTime, ReadingStatus readingStatus) {
