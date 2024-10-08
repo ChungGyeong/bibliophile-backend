@@ -8,6 +8,6 @@ public class UserNotMyBookHostException extends MainException {
     public static final MainException EXCEPTION = new UserNotMyBookHostException();
 
     private UserNotMyBookHostException() {
-        super(ErrorCode.USER_NOT_STORYBOOK_HOST);
+        super(ErrorCode.USER_NOT_MY_BOOK_HOST);
     }
 }
