@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ContentRecommendationRequest(
         @NotBlank
-        String title,
-        int requestNumber
+        Long bookId
 ) {
 }

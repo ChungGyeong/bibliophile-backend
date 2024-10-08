@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RecommendCacheRepository extends JpaRepository<RecommendCache,Long> {
-    Optional<RecommendCache> findFirstByTitleNm(String title);
+    Optional<RecommendCache> findFirstByRecommendations(String recommendations);
 }
