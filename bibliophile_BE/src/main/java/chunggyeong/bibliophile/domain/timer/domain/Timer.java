@@ -2,11 +2,13 @@ package chunggyeong.bibliophile.domain.timer.domain;
 
 import chunggyeong.bibliophile.domain.myBook.domain.MyBook;
 import chunggyeong.bibliophile.global.database.BaseEntity;
+import chunggyeong.bibliophile.global.utils.DurationConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -27,21 +29,19 @@ public class Timer extends BaseEntity {
     @JoinColumn(name = "my_book_id")
     private MyBook myBook;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    @Convert(converter = DurationConverter.class)
+    private Duration duration;
 
     @Builder
-    public Timer(MyBook myBook, LocalDateTime startTime, LocalDateTime endTime) {
+    public Timer(MyBook myBook, Duration duration) {
         this.myBook = myBook;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.duration = duration;
     }
 
-    public static Timer createTimer(MyBook myBook, LocalDateTime startTime, LocalDateTime endTime) {
+    public static Timer createTimer(MyBook myBook, Duration duration) {
         return builder()
                 .myBook(myBook)
-                .startTime(startTime)
-                .endTime(endTime)
+                .duration(duration)
                 .build();
     }
 }

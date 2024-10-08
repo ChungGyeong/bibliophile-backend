@@ -1,15 +1,16 @@
 package chunggyeong.bibliophile.domain.timer.presentation.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
 
 public record AddTimerRequest(
         @NotNull
         Long myBookId,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
-        LocalDateTime startTime,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
-        LocalDateTime endTime
+        @NotNull
+        String duration
 ) {
+        public Duration getDurationAsDuration() {
+                return Duration.parse(duration);
+        }
 }

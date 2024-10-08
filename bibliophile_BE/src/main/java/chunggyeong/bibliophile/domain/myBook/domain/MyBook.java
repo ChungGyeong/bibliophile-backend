@@ -6,6 +6,7 @@ import chunggyeong.bibliophile.domain.myBook.exception.UserNotMyBookHostExceptio
 import chunggyeong.bibliophile.domain.timer.domain.Timer;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.global.database.BaseEntity;
+import chunggyeong.bibliophile.global.utils.DurationConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,8 @@ public class MyBook extends BaseEntity {
     private Book book;
 
     private int readingPage;
+
+    @Convert(converter = DurationConverter.class)
     private Duration totalReadingTime;
     private LocalDateTime completionReadingTime;
 

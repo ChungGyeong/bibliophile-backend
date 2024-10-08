@@ -39,13 +39,13 @@ public class TimerService {
 
         myBookServiceUtils.validUserIsHost(myBook, user);
 
-        Timer timer = Timer.createTimer(myBook, addTimerRequest.startTime(), addTimerRequest.endTime());
+        Timer timer = Timer.createTimer(myBook, addTimerRequest.getDurationAsDuration());
 
         timerRepository.save(timer);
 
-        String readingTime = formatDuration(Duration.between(timer.getStartTime(), timer.getEndTime()));
+        String readingTime = formatDuration(timer.getDuration());
 
-        Duration totalReadingTime = myBook.getTotalReadingTime().plus(Duration.between(timer.getStartTime(), timer.getEndTime()));
+        Duration totalReadingTime = myBook.getTotalReadingTime().plus(addTimerRequest.getDurationAsDuration());
 
         myBook.updateTotalReadingTime(totalReadingTime);
 
@@ -55,9 +55,7 @@ public class TimerService {
     // 읽은 시간 통계 조회
     public List<ReadingStatisticsResponse> findTotalReadingTime() {
         User user = userUtils.getUserFromSecurityContext();
-        int currentYear = Year.now().getValue();
-
-        List<Object[]> monthlyStats = timerRepository.sumMonthlyDurationByUserIdAndYear(user.getId(), currentYear);
+        List<Object[]> monthlyStats = timerRepository.sumMonthlyDurationByUserId(user.getId());
 
         Map<Integer, Long> statsMap = monthlyStats.stream()
                 .collect(Collectors.toMap(
@@ -69,17 +67,19 @@ public class TimerService {
         for (int month = 1; month <= 12; month++) {
             long totalSeconds = statsMap.getOrDefault(month, 0L);
             Duration duration = Duration.ofSeconds(totalSeconds);
-            String formattedDuration = formatDuration(duration);
+            String formattedDuration = formatDuration(duration); // formatDuration 메서드 확인 필요
             responses.add(new ReadingStatisticsResponse(month, formattedDuration));
         }
 
         return responses;
     }
 
+
+
     private String formatDuration(Duration duration) {
         long hours = duration.toHours();
         long minutes = duration.toMinutesPart();
         long seconds = duration.toSecondsPart();
-        return String.format("%d:%d:%d", hours, minutes, seconds);
+        return String.format("%d:%02d:%02d", hours, minutes, seconds);
     }
 }
