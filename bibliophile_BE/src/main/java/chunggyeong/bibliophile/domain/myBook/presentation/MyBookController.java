@@ -5,6 +5,7 @@ import chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.AddMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookStatusRequest;
+import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.CheckMyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.service.MyBookService;
@@ -79,5 +80,11 @@ public class MyBookController {
     @PatchMapping("/re-read/{myBookId}")
     public MyBookResponse reReadBook(@PathVariable Long myBookId) {
         return myBookService.reReadBook(myBookId);
+    }
+
+    @Operation(summary = "해당 책이 나의 책에 있는지 확인")
+    @GetMapping("/check/{bookId}")
+    public CheckMyBookResponse checkMyBook(@PathVariable Long bookId) {
+        return myBookService.checkMyBook(bookId);
     }
 }

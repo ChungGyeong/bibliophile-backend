@@ -15,6 +15,7 @@ import chunggyeong.bibliophile.domain.myBook.exception.MyBookNotFoundException;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.AddMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookRequest;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBookStatusRequest;
+import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.CheckMyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
 import chunggyeong.bibliophile.domain.streak.service.StreakService;
@@ -212,6 +213,15 @@ public class MyBookService implements MyBookServiceUtils{
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, myBook.getBook());
 
         return new MyBookResponse(myBook, myBook.getBook(), "00:00:00", 0, isBookmarked);
+    }
+
+    // 해당 책이 나의 책에 있는지 확인
+    public CheckMyBookResponse checkMyBook(Long bookId) {
+        Book book = bookServiceUtils.queryBook(bookId);
+        User user = userUtils.getUserFromSecurityContext();
+        boolean isMyBook = myBookRepository.existsByUserAndBook(user, book);
+
+        return new CheckMyBookResponse(isMyBook);
     }
 
 //    모든 유저의 워드클라우드 초기화
