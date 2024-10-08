@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus.READING;
 import static chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus.UNREAD;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -98,7 +99,7 @@ public class MyBook extends BaseEntity {
     }
 
     public void reReadBook() {
-        this.readingStatus = UNREAD;
+        this.readingStatus = READING;
         this.readingPage = 0;
         this.totalReadingTime = Duration.ZERO;
         this.completionReadingTime = null;
