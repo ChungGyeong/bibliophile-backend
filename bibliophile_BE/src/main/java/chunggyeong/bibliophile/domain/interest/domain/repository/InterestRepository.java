@@ -16,4 +16,6 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     Integer countByUser(User user);
 
     void deleteAllByUser(User user);
+
+    boolean existsByUser(User user);
 }

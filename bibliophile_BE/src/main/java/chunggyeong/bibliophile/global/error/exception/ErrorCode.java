@@ -44,6 +44,7 @@ public enum ErrorCode {
     BOOK_REPORT_NOT_FOUND(404,"해당하는 독후감 정보를 찾을 수 없습니다."),
     MEMO_NOT_FOUND(404, "해당하는 메모 정보를 찾을 수 없습니다."),
     FOX_NOT_FOUND(404,"내 계정에 속해있는 여우를 찾을 수 없습니다."),
+    NO_EXIST_INTEREST(404,"내가 현재 등록해둔 관심사가 없어 추천책을 가져올 수 없습니다."),
 
     /* 409 중복된 리소스 */
     USER_DUPLICATION(409, "이미 가입된 사용자입니다."),

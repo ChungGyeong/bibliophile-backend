@@ -3,6 +3,7 @@ package chunggyeong.bibliophile.domain.book.service;
 import chunggyeong.bibliophile.domain.book.domain.Book;
 import chunggyeong.bibliophile.domain.book.domain.repository.BookRepository;
 import chunggyeong.bibliophile.domain.book.exception.BookNotFoundException;
+import chunggyeong.bibliophile.domain.book.exception.NotExistInterestException;
 import chunggyeong.bibliophile.domain.book.presentation.dto.request.ContentRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.request.TagRecommendationRequest;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.BookResponse;
@@ -10,6 +11,7 @@ import chunggyeong.bibliophile.domain.book.presentation.dto.response.ContentReco
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.RecommendResponse;
 import chunggyeong.bibliophile.domain.book.presentation.dto.response.TagRecommendResponse;
 import chunggyeong.bibliophile.domain.bookmark.domain.repository.BookmarkRepository;
+import chunggyeong.bibliophile.domain.interest.domain.repository.InterestRepository;
 import chunggyeong.bibliophile.domain.myBook.domain.repository.MyBookRepository;
 import chunggyeong.bibliophile.domain.recommendcache.domain.RecommendCache;
 import chunggyeong.bibliophile.domain.recommendcache.domain.repository.RecommendCacheRepository;
@@ -39,6 +41,7 @@ public class BookService implements BookServiceUtils {
     private final RestTemplate restTemplate;
     private final BookmarkRepository bookmarkRepository;
     private final RecommendCacheRepository recommendCacheRepository;
+    private final InterestRepository recommendRepository;
 
     @Override
     public BookResponse findBookByIsbn(String isbn) {
@@ -77,6 +80,11 @@ public class BookService implements BookServiceUtils {
 
     public List<BookResponse> findRecommendBooksByUserInterest() {
         User user = userUtils.getUserFromSecurityContext();
+
+        if(!recommendRepository.existsByUser(user)){
+            throw NotExistInterestException.EXCEPTION;
+        }
+
         String url = "https://j11b204.p.ssafy.io/recommend/collaborative?id="+user.getId();
 
         HttpHeaders headers = new HttpHeaders();
