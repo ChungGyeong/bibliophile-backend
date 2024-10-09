@@ -124,6 +124,7 @@ public class BookService implements BookServiceUtils {
         Book book = bookRepository.findById(contentRecommendationRequest.bookId()).orElseThrow(()-> BookNotFoundException.EXCEPTION);
 
         List<BookResponse> bookResponses = new ArrayList<>();
+        Set<String> bookTitles = new HashSet<>();
         RecommendCache recommendCache = recommendCacheRepository.findFirstByRecommendations(book.getTitle()).orElse(null);
         if(recommendCache!=null){
             String[] titles =recommendCache.getTitleNm().split(", ");
@@ -133,6 +134,10 @@ public class BookService implements BookServiceUtils {
                     continue;
                 }
                 if(!myBookRepository.existsByUserAndBook(user,requestBook.get())){
+                    if(bookTitles.contains(recommendationTitle)){
+                        continue;
+                    }
+                    bookTitles.add(recommendationTitle);
                     bookResponses.add(new BookResponse(requestBook.get(),true));
                 }
                 if(bookResponses.size()==6){
