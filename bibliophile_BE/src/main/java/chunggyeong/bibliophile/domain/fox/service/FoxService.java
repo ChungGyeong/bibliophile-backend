@@ -44,7 +44,7 @@ public class FoxService implements FoxServiceUtils{
         User user = userUtils.getUserFromSecurityContext();
         log.info("User {} find a fox", user);
         Fox fox = queryFoxByUser(user);
-        if(fox.getLastModifyDate().plusHours(24).isBefore(LocalDateTime.now())){
+        if(fox.getLastFeedDate().plusHours(1).isBefore(LocalDateTime.now())){
             fox.updateFoxStatus(FoxStatus.BAD);
         }
         return new FoxResponse(fox);

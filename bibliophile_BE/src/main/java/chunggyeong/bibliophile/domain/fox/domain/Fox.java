@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -33,6 +35,8 @@ public class Fox extends BaseEntity {
     @Enumerated(STRING)
     private FoxStatus status;
 
+    private LocalDateTime lastFeedDate;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -46,6 +50,7 @@ public class Fox extends BaseEntity {
         this.status = FoxStatus.GOOD;
         this.user = user;
         this.percent = 0.0;
+        this.lastFeedDate = LocalDateTime.now().minusDays(1);
     }
 
     public static Fox createFox(User user) {
@@ -60,6 +65,8 @@ public class Fox extends BaseEntity {
         }
         this.feedCount--;
         this.exp++;
+        this.lastFeedDate = LocalDateTime.now();
+        this.status = FoxStatus.GOOD;
 
         if(this.level<5){
             this.percent = exp/3.0*100;
@@ -84,7 +91,6 @@ public class Fox extends BaseEntity {
     public void levelUp(){
         this.level++;
         this.exp=0;
-        this.status = FoxStatus.GOOD;
         this.percent = 0.0;
         if(this.level==5){
             this.type = FoxType.YOUTH;
