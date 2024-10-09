@@ -125,6 +125,7 @@ public class BookService implements BookServiceUtils {
 
         List<BookResponse> bookResponses = new ArrayList<>();
         Set<String> bookTitles = new HashSet<>();
+        bookTitles.add(book.getTitle());
         RecommendCache recommendCache = recommendCacheRepository.findFirstByRecommendations(book.getTitle()).orElse(null);
         if(recommendCache!=null){
             String[] titles =recommendCache.getTitleNm().split(", ");
