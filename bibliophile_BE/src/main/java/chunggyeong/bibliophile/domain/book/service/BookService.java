@@ -54,7 +54,16 @@ public class BookService implements BookServiceUtils {
     @Override
     public Page<BookResponse> findBooksByTitle(String title, Pageable pageable) {
         User user = userUtils.getUserFromSecurityContext();
-        return bookRepository.searchByTitleUsingFullText(title, pageable)
+        System.out.println(title);
+        String[] word = title.split(" ");
+        StringBuilder resultBuilder = new StringBuilder();
+        for (String w : word) {
+            if(w.length()==1) continue;
+            resultBuilder.append("+").append(w).append(" ");
+        }
+        String result = resultBuilder.toString().trim();
+        System.out.println(result);
+        return bookRepository.searchByTitleUsingFullText(result, pageable)
                 .map(myBook -> new BookResponse(myBook,existsByUserAndBook(user,myBook)));
     }
 
