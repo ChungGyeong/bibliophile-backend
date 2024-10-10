@@ -13,10 +13,8 @@ import chunggyeong.bibliophile.domain.user.domain.repository.RefreshTokenReposit
 import chunggyeong.bibliophile.domain.user.domain.repository.UserRepository;
 import chunggyeong.bibliophile.domain.user.exception.NicknameDuplicationException;
 import chunggyeong.bibliophile.domain.user.exception.UserDuplicationException;
-import chunggyeong.bibliophile.domain.user.presentation.dto.request.CheckNicknameRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.SignUpUserRequest;
 import chunggyeong.bibliophile.domain.user.presentation.dto.request.UpdateUserRequest;
-import chunggyeong.bibliophile.domain.user.presentation.dto.response.CheckNicknameResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserProfileResponse;
 import chunggyeong.bibliophile.domain.user.presentation.dto.response.UserWordCloudResponse;
 import chunggyeong.bibliophile.global.security.JwtTokenProvider;
@@ -82,12 +80,6 @@ public class UserService {
         return new UserProfileResponse(user, classificationStringList);
     }
 
-
-    // 닉네임 중복 확인
-    public CheckNicknameResponse checkNickname(CheckNicknameRequest checkNicknameRequest) {
-        return new CheckNicknameResponse(userRepository.existsByNickname(checkNicknameRequest.nickname()));
-    }
-
     // 로그아웃
     @Transactional
     public void logout(HttpServletResponse response) {
@@ -113,10 +105,6 @@ public class UserService {
     public UserProfileResponse updateUser(UpdateUserRequest updateUserRequest) {
         User user = userUtils.getUserFromSecurityContext();
         List<Classification> classificationList = interestServiceUtils.findInterestsByUser(user);
-
-        if (!updateUserRequest.nickname().equals(user.getNickname()) && userRepository.existsByNickname(updateUserRequest.nickname())) {
-            throw NicknameDuplicationException.EXCEPTION;
-        }
 
         user.updateUser(updateUserRequest.nickname(), updateUserRequest.profileImage());
         interestServiceUtils.deleteAllByUser(user);
