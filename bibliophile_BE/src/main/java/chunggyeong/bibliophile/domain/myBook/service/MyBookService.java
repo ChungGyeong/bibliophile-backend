@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static chunggyeong.bibliophile.domain.myBook.domain.ReadingStatus.READ;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -123,6 +125,10 @@ public class MyBookService implements MyBookServiceUtils{
         myBook.validPage(updateMyBookRequest.page(), book.getPage());
         myBook.updatePage(updateMyBookRequest.page());
 
+        if (book.getPage() == updateMyBookRequest.page()) {
+            myBook.updateReadingStatus(READ);
+        }
+
         boolean isBookmarked = bookmarkServiceUtils.existsByUserAndBook(user, book);
         String totalReadingTime = getTotalTimeFormatted(myBook.getTotalReadingTime());
         int readingTime = (int) Math.round((double) myBook.getReadingPage() / book.getPage() * 100);
@@ -155,7 +161,7 @@ public class MyBookService implements MyBookServiceUtils{
 
         myBook.updateReadingStatus(updateMyBookStatusRequest.status());
 
-        if(updateMyBookStatusRequest.status().equals(ReadingStatus.READ)){
+        if(updateMyBookStatusRequest.status().equals(READ)){
             Fox fox = foxServiceUtils.queryFoxByUser(user);
             fox.updateAddFoxFeedCount();
             myBook.updateCompletionReadingTime();

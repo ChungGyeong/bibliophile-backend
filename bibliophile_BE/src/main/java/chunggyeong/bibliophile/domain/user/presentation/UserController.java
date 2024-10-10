@@ -32,13 +32,6 @@ public class UserController {
         return userService.signUp(signUpUserRequest, response);
     }
 
-    @SecurityRequirements
-    @Operation(summary = "닉네임 중복 확인")
-    @PostMapping("/check-nickname")
-    public CheckNicknameResponse checkNickname(@RequestBody CheckNicknameRequest nicknameCheckRequest) {
-        return userService.checkNickname(nicknameCheckRequest);
-    }
-
     @Operation(summary = "로그아웃")
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {
