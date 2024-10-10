@@ -18,6 +18,7 @@ import chunggyeong.bibliophile.domain.myBook.presentation.dto.request.UpdateMyBo
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.CheckMyBookResponse;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookCountByKDC;
 import chunggyeong.bibliophile.domain.myBook.presentation.dto.response.MyBookResponse;
+import chunggyeong.bibliophile.domain.review.domain.repository.ReviewRepository;
 import chunggyeong.bibliophile.domain.streak.service.StreakService;
 import chunggyeong.bibliophile.domain.user.domain.User;
 import chunggyeong.bibliophile.domain.user.domain.repository.UserRepository;
@@ -60,6 +61,7 @@ public class MyBookService implements MyBookServiceUtils{
     private final FoxServiceUtils foxServiceUtils;
     private final StreakService streakService;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
     // 나의 책 등록
     @Transactional
@@ -145,6 +147,8 @@ public class MyBookService implements MyBookServiceUtils{
         validUserIsHost(myBook, user);
 
         myBookRepository.delete(myBook);
+
+        reviewRepository.deleteAllByBookAndUser(myBook.getBook(), user);
     }
 
     // 나의 책 상태 변경
